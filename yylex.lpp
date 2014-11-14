@@ -1,0 +1,134 @@
+%{
+#ifndef NODE_H_
+#define NODE_H_
+#include "node.h"
+#endif
+
+#ifndef YYLEX_HPP_
+#define YYLEX_HPP_
+#include "yyparse.tab.hpp"
+#endif
+
+#include "assert.h"
+
+template<short Tok>
+inline short MakeToken();
+
+#define Return(TOK)					\
+  return MakeToken<TOK>()
+
+%}
+
+%option header-file = "yylex.hpp"
+
+%%
+
+"="         { Return(ASSIGN);}
+"=="        { Return(EQ);}
+"<"         { Return(LT);}
+">"         { Return(GT);}
+"<="        { Return(LE);}
+">="        { Return(GE);}
+"||"        { Return(LOGOR);}
+"&&"        { Return(LOGAND);}
+"+"         { Return(PLUS);}
+"-"         { Return(MINUS);}
+"*"         { Return(MULT);}
+"/"         { Return(DIVIDE);}
+"%"         { Return(MOD);}
+"!"         { Return(LOGNOT);}  
+"alias"     { Return(ALIAS);}
+"type"      { Return(TYPE);}
+"int"       { Return(INT);}
+"double"    { Return(DOUBLE);}
+"string"    { Return(STRING);}
+"null"      { Return(NUL);}
+"func"      { Return(FUNC);}
+"::["       { Return(FUNC_BRAC);}
+","         { Return(COMMA);}
+";"         { Return(SEMICOLON);}
+":"         { Return(COLON);}
+"if"        { Return(IF);}
+"else"      { Return(ELSE);}
+"switch"    { Return(SWITCH);}
+"->"        { Return(EVENT);}
+"<-"        { Return(BEHAV);}
+"return"    { Return(RETURN);}
+[A-Za-z_]+  { Return(IDEN);}
+[0-9]+      { Return(INT_NUM);}
+[0-9]*\.[0-9]+ { Return(DOUBLE_NUM);}
+"//".*\n    ;
+[ \t\n]     ;
+%{
+/*
+.           { 
+              char* msg = (char*)malloc(100);
+              msg = strcpy(msg, "illegal token: ");
+              strcat(msg, yytext);
+              yy_fatal_error(msg);
+            }
+*/
+// TODO(tianshi): use lex to handle escape in string constant.
+%}
+%%
+int yywrap(){
+  return 1;
+}
+
+extern YYSTYPE yylval;
+
+// base == 10
+double str_to_d(char* s) {
+  const double base = 10;
+  double int_value = 0;
+  int i = 0; 
+  while(s[i] && s[i] != '.') {
+    assert(s[i] >= '0');
+    assert(s[i] <= '9');
+    int_value *= base;
+    int_value += s[i] - '0';
+    ++i;
+  }
+  if (s[i] == '.') {
+    ++i;
+  } else {
+    return int_value;
+  }
+  double frac_value = 0; 
+  double base_mult = base;
+  while(s[i]) {
+    assert(s[i] >= '0');
+    assert(s[i] <= '9');
+    frac_value += (s[i] - '0') / base_mult; 
+    base_mult *= base;
+    ++i;
+  }
+  return int_value + frac_value;
+}
+
+int str_to_32(char* s) {
+  const int base = 10;
+  int value = 0;
+  for (int i = 0 ; s[i] ; ++i) {
+    assert(s[i] >= '0');
+    assert(s[i] <= '9');
+    value *= base;
+    value += (s[i] - '0');
+  }
+  return value;
+}
+
+template<short Tok>
+inline short MakeToken() {
+  switch(Tok) {
+    case INT_NUM:
+      yylval.int_token = new IntToken(Tok, str_to_d(yytext));
+    break;
+    case DOUBLE_NUM:
+      yylval.double_token = new DoubleToken(Tok, str_to_32(yytext));
+    break;
+    default:
+      yylval.token = new StringToken(Tok, yytext);
+  } 
+  return Tok;
+}
