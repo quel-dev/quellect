@@ -12,7 +12,6 @@
 #include <cstdio>
 
 Node* root = NULL; 
-int test = 1;
 
 void yyerror(const char* msg) {
   fprintf(stderr, "%s\n", msg);
@@ -107,12 +106,7 @@ void yyerror(const char* msg) {
 
 %%
 start
-  : compound-statement                                  { root = $1;
-  
-                                                                puts("!!!!!");
-                                                                printf("%p\n", root);
-                                                                test = 2;
-  }
+  : compound-statement                                  { root = $1;}
   ;
 
 assignment-expression 
@@ -364,14 +358,10 @@ statement
   ;
 
 compound-statement
-  : /* empty */                                                         { $$ = new ListNode("statement_list");
-                                                                          printf("%p\n", $$);
-  }
+  : /* empty */                                                         { $$ = new ListNode("statement_list");}
   | statement SEMICOLON compound-statement                              {
                                                                           $$ = $3;
                                                                           ($$)->Add($1);
-                                                                          puts("statement!");
-                                                                          printf("%p\n", ($$));
                                                                         }
   | declaration SEMICOLON compound-statement                            {
                                                                           $$ = $3;
