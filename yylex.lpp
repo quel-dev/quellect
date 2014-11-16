@@ -23,7 +23,6 @@ inline short MakeToken();
 
 %%
 
-"="         { Return(ASSIGN);}
 "=="        { Return(EQ);}
 "<"         { Return(LT);}
 ">"         { Return(GT);}
@@ -45,31 +44,18 @@ inline short MakeToken();
 "null"      { Return(NUL);}
 "func"      { Return(FUNC);}
 "::["       { Return(FUNC_BRAC);}
-","         { Return(COMMA);}
-";"         { Return(SEMICOLON);}
-":"         { Return(COLON);}
 "if"        { Return(IF);}
 "else"      { Return(ELSE);}
 "switch"    { Return(SWITCH);}
 "->"        { Return(EVENT);}
 "<-"        { Return(BEHAV);}
 "return"    { Return(RETURN);}
-[A-Za-z_]+  { Return(IDEN);}
+[A-Za-z_]+[0-9]*  { Return(IDEN);}
 [0-9]+      { Return(INT_NUM);}
 [0-9]*\.[0-9]+ { Return(DOUBLE_NUM);}
 "//".*\n    ;
 [ \t\n]     ;
-%{
-/*
-.           { 
-              char* msg = (char*)malloc(100);
-              msg = strcpy(msg, "illegal token: ");
-              strcat(msg, yytext);
-              yy_fatal_error(msg);
-            }
-*/
-// TODO(tianshi): use lex to handle escape in string constant.
-%}
+.           {return yytext[0];}
 %%
 int yywrap(){
   return 1;

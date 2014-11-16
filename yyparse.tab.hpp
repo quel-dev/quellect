@@ -67,21 +67,18 @@ extern int yydebug;
     NUL = 277,
     FUNC = 278,
     FUNC_BRAC = 279,
-    COMMA = 280,
-    SEMICOLON = 281,
-    COLON = 282,
-    IF = 283,
-    ELSE = 284,
-    SWITCH = 285,
-    EVENT = 286,
-    BEHAV = 287,
-    RETURN = 288,
-    BREAK = 289,
-    CONTINUE = 290,
-    IDEN = 291,
-    INT_NUM = 292,
-    DOUBLE_NUM = 293,
-    CONST_STR = 294
+    IF = 280,
+    ELSE = 281,
+    SWITCH = 282,
+    EVENT = 283,
+    BEHAV = 284,
+    RETURN = 285,
+    BREAK = 286,
+    CONTINUE = 287,
+    IDEN = 288,
+    INT_NUM = 289,
+    DOUBLE_NUM = 290,
+    CONST_STR = 291
   };
 #endif
 
@@ -90,14 +87,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 23 "yyparse.ypp" /* yacc.c:1909  */
+#line 22 "yyparse.ypp" /* yacc.c:1909  */
 
   Node* node;
   IntToken* int_token;
   DoubleToken* double_token;
   StringToken* token;
 
-#line 101 "yyparse.tab.hpp" /* yacc.c:1909  */
+#line 98 "yyparse.tab.hpp" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

@@ -106,9 +106,8 @@ Node* TypeIdenPair::GetPairType() {
   return type_;
 }
 
-VarDef::VarDef(const std::string& var_iden, Node* type,
-    Node* initializer):
-    var_iden_(var_iden), type_(type), initializer_(initializer) {
+VarDef::VarDef(const std::string& var_iden, Node* initializer):
+    var_iden_(var_iden), initializer_(initializer) {
   node_type_ = "var_def";    
 }
 

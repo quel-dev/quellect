@@ -50,9 +50,6 @@ void yyerror(const char* msg) {
 %token<token> NUL
 %token<token> FUNC
 %token<token> FUNC_BRAC
-%token<token> COMMA
-%token<token> SEMICOLON
-%token<token> COLON
 %token<token> IF
 %token<token> ELSE
 %token<token> SWITCH
@@ -68,7 +65,6 @@ void yyerror(const char* msg) {
 
 %type<node> start
 %type<node> assignment-expression
-%type<node> assignment-operator
 %type<node> constant-expression
 %type<node> logical-or-expression
 %type<node> logical-and-expression
@@ -101,8 +97,8 @@ void yyerror(const char* msg) {
 %type<node> jump-statement
 %type<node> function-expression
 
-// TODO(tianshi): To solve the remaining conflict.
-%expect 1
+// TODO(tianshi): To solve the remaining conflicts.
+%expect 1 
 
 %%
 start
@@ -110,15 +106,10 @@ start
   ;
 
 assignment-expression 
-  : constant-expression                                 { $$ = $1; }
-  | IDEN assignment-operator assignment-expression      { 
+  : constant-expression                                 { $$ = $1; puts("assignment-expression");}
+  | IDEN '=' assignment-expression                      { 
                                                           $$ = new AssignExpNode($1, $3);
-                                                          delete($2);
                                                         }
-  ;
-
-assignment-operator
-  : ASSIGN                                              { $$ = $1;}
   ;
 
 constant-expression
@@ -189,9 +180,9 @@ additive-expression
   ;
 
 multiplicative-expression
-  : unary-expression          {
-                                $$ = $1;
-                              }
+  : unary-expression                                          {
+                                                                $$ = $1;
+                                                              }
   | multiplicative-expression MULT unary-expression           {
                                                                 $$ = new BinaryOpExpNode($1, $3, "*");
                                                                 delete($2);
@@ -226,7 +217,7 @@ postfix-expression
   ;
 
 primary-expression
-  : IDEN                                                      { $$ = $1;}
+  : IDEN                                                      { $$ = $1; puts("primary-expression");}
   | INT_NUM                                                   { $$ = $1;}
   | DOUBLE_NUM                                                { $$ = $1;}
   | CONST_STR                                                 { $$ = $1;}
@@ -235,9 +226,11 @@ primary-expression
                                                               }
   | '(' constant-expression ')'                               {
                                                                 $$ = $2;
+                                                                puts("constant-expression");
                                                               }
   | function-expression                                       {
                                                                 $$ = $1;
+                                                                puts("function-expression");
                                                               }
   ;
 
@@ -255,14 +248,14 @@ newtype-definition
                                                                 delete($1);
                                                                 delete($3);
                                                               }
-  | TYPE IDEN ASSIGN IDEN FUNC_BRAC type-comma-list ']'           {
+  | TYPE IDEN ASSIGN IDEN FUNC_BRAC type-comma-list ']'       {
                                                                 Node* cons = new ConsDefNode(($4)->GetStrTok(), $6);
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), cons);
                                                                 delete($1);  // token 'type'
                                                                 delete($3);  // token '='
                                                                 delete($5);  // token FUNC_BRAC
                                                               }
-  | newtype-definition '|' IDEN FUNC_BRAC type-comma-list ']'     {
+  | newtype-definition '|' IDEN FUNC_BRAC type-comma-list ']' {
                                                                 $$ = $1;
                                                                 Node* cons = new ConsDefNode(($3)->GetStrTok(), $5);
                                                                 ($$)->Add(cons);
@@ -277,10 +270,9 @@ type
 
 type-comma-list
   : type                                                      { $$ = new ListNode("type_list", $1); }
-  | type COMMA type-comma-list                                {
+  | type ',' type-comma-list                                  {
                                                                 $$ = $3;
                                                                 ($$)->Add($1);
-                                                                delete($2);
                                                               }
   ;
 
@@ -297,18 +289,19 @@ type-iden-pair
   ;
 
 declaration
-  : newtype-definition                                        {
+  : newtype-definition ';'                                    {
                                                                 $$ = $1;
                                                               }
   | IDEN function-literal                                     {
                                                                 $$ = new FuncDef(($1)->GetStrTok(), $2);
                                                               }
-  | IDEN ASSIGN '[' expression-comma-list ']'                 {
-                                                                $$ = new VarDef(($2)->GetStrTok(), $1, $4);
+  | IDEN ASSIGN newtype-expression ';'                        {
+                                                                $$ = new VarDef(($1)->GetStrTok(), $3);
                                                               }
-  | type-iden-pair                                            { $$ = new VarDef($1, NULL);}
-  | type-iden-pair ASSIGN initializer                         {
+  | type-iden-pair ';'                                        { $$ = new VarDef($1, NULL);}
+  | type-iden-pair ASSIGN initializer ';'                     {
                                                                 $$ = new VarDef($1, $3);
+                                                                puts("declaration");
                                                               }
   ;
 
@@ -328,10 +321,9 @@ parameter-pair-comma-list
   : type-iden-pair                                                      {
                                                                           $$ = new ListNode("para_list", $1);
                                                                         }
-  | parameter-pair-comma-list COMMA type-iden-pair                      {
+  | parameter-pair-comma-list ',' type-iden-pair                        {
                                                                           $$ = $1;
                                                                           ($$)->Add($3);
-                                                                          delete($2);
                                                                         }
   ;
 
@@ -342,29 +334,29 @@ expression
 
 expression-comma-list
   : expression                                                          { $$ = new ListNode("exp_list", $1);}
-  | expression COMMA expression-comma-list                              {
+  | expression ',' expression-comma-list                                {
                                                                           $$ = $3;
                                                                           ($$)->Add($1);
-                                                                          delete($2);
                                                                         }
   ;
 
 statement
-  : assignment-expression                                               { $$ = $1;}
-  | selection-statement                                                 { $$ = $1;}
-  | behavior-statement                                                  { $$ = $1;}
-  | event-statement                                                     { $$ = $1;}
-  | jump-statement                                                      { $$ = $1;}
+  : assignment-expression ';'                                           { $$ = $1; puts("assignment");}
+  | selection-statement   ';'                                           { $$ = $1;}
+  | behavior-statement    ';'                                           { $$ = $1;}
+  | event-statement       ';'                                           { $$ = $1;}
+  | jump-statement        ';'                                           { $$ = $1;}
   ;
 
 compound-statement
   : /* empty */                                                         { $$ = new ListNode("statement_list");}
-  | statement SEMICOLON compound-statement                              {
-                                                                          $$ = $3;
-                                                                          ($$)->Add($1);
+  | statement compound-statement                                        {
+                                                                          $$ = $2;
+                                                                          ($$)->Add($1); 
+                                                                          puts("compound-statement");
                                                                         }
-  | declaration SEMICOLON compound-statement                            {
-                                                                          $$ = $3;
+  | declaration compound-statement                                      {
+                                                                          $$ = $2;
                                                                           ($$)->Add($1);
                                                                         }
   ;
@@ -398,13 +390,13 @@ selection-statement
   | SWITCH constant-expression '{' switch-branch '}'                    {
                                                                           $$ = new SwitchNode($2, $4);
                                                                         }
+  ;
 
 switch-branch
   : /* empty */                                                         { $$ = new SwitchBranch();}
-  | switch-branch constant-expression COLON '{' compound-statement '}'  {
+  | switch-branch constant-expression ':' '{' compound-statement '}'    {
                                                                           $$ = $1;
                                                                           ($$)->AddBranch($2, $5);
-                                                                          delete($3);
                                                                         }
   ;
 
@@ -425,6 +417,7 @@ jump-statement
                                                                           $$ = new JumpNode("return", NULL);
                                                                           delete($1);
                                                                         }
+  ;
 
 behavior-statement
   : IDEN BEHAV constant-expression                                      {
@@ -442,4 +435,4 @@ event-statement
                                                                           $$ = new EventNode($1, $4);
                                                                           delete($2);
                                                                         }
-
+  ;

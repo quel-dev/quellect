@@ -135,7 +135,7 @@ class TypeIdenPair : public Node {
 
 class VarDef : public Node {
  public:
-  VarDef(const std::string& var_iden, Node* type, Node* initializer);
+  VarDef(const std::string& var_iden, Node* initializer);
   VarDef(Node* pair, Node* initializer);
  protected:
   const std::string var_iden_;
