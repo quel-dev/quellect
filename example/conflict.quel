@@ -1,1 +1,10 @@
-a = (b + v);
+BuildNode::[int data, Node lc_, Node rc_]{
+  Dispatch::[string descriptor]{
+    switch descriptor{
+      1 : {data;}
+      2 : {::[int lc]{lc_=lc;};}
+      3 : {::[int rc]{rc_=rc;};}
+      4 : {::[int x]{data = x;};}
+    }
+  }
+}

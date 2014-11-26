@@ -28,7 +28,6 @@ void yyerror(const char* msg) {
 
 %start start
 
-%token<token> ASSIGN
 %token<token> EQ
 %token<token> LT
 %token<token> GT
@@ -36,11 +35,6 @@ void yyerror(const char* msg) {
 %token<token> GE
 %token<token> LOGOR
 %token<token> LOGAND
-%token<token> PLUS
-%token<token> MINUS
-%token<token> MULT
-%token<token> DIVIDE
-%token<token> MOD
 %token<token> LOGNOT
 %token<token> ALIAS
 %token<token> TYPE
@@ -83,7 +77,6 @@ void yyerror(const char* msg) {
 %type<node> type-iden-pair
 %type<node> newtype-expression
 %type<node> declaration
-%type<node> initializer
 %type<node> function-literal
 %type<node> parameter-pair-comma-list
 %type<node> expression
@@ -97,8 +90,6 @@ void yyerror(const char* msg) {
 %type<node> jump-statement
 %type<node> function-expression
 
-// TODO(tianshi): To solve the remaining conflicts.
-%expect 1 
 
 %%
 start
@@ -106,9 +97,9 @@ start
   ;
 
 assignment-expression 
-  : constant-expression                                 { $$ = $1; puts("assignment-expression");}
-  | IDEN '=' assignment-expression                      { 
-                                                          $$ = new AssignExpNode($1, $3);
+  : expression ';'                                      { $$ = $1;}
+  | expression '=' assignment-expression                {
+                                                          $$ = new BinaryOpExpNode($1, $3, "=");
                                                         }
   ;
 
@@ -169,13 +160,11 @@ additive-expression
   : multiplicative-expression                                 {
                                                                 $$ = $1;
                                                               }
-  | additive-expression PLUS multiplicative-expression        {
+  | additive-expression '+' multiplicative-expression         {
                                                                 $$ = new BinaryOpExpNode($1, $3, "+");
-                                                                delete($2);
                                                               }
-  | additive-expression MINUS multiplicative-expression       {
+  | additive-expression '-' multiplicative-expression         {
                                                                 $$ = new BinaryOpExpNode($1, $3, "-");
-                                                                delete($2);
                                                               }
   ;
 
@@ -183,17 +172,14 @@ multiplicative-expression
   : unary-expression                                          {
                                                                 $$ = $1;
                                                               }
-  | multiplicative-expression MULT unary-expression           {
+  | multiplicative-expression '*' unary-expression            {
                                                                 $$ = new BinaryOpExpNode($1, $3, "*");
-                                                                delete($2);
                                                               }
-  | multiplicative-expression DIVIDE unary-expression         {
+  | multiplicative-expression '/' unary-expression            {
                                                                 $$ = new BinaryOpExpNode($1, $3, "/");
-                                                                delete($2);
                                                               }
-  | multiplicative-expression MOD unary-expression            {
+  | multiplicative-expression '%' unary-expression            {
                                                                 $$ = new BinaryOpExpNode($1, $3, "%");
-                                                                delete($2);
                                                               }
   ;
 
@@ -201,9 +187,8 @@ unary-expression
   : postfix-expression                                        {
                                                                 $$ = $1;
                                                               }
-  | LOGNOT postfix-expression                                 {
+  | '!' postfix-expression                                    {
                                                                 $$ = new UnaryOpExpNode($2, "!");
-                                                                delete($1);
                                                               }
   ;
 
@@ -212,12 +197,12 @@ postfix-expression
                                                                 $$ = $1;
                                                               }
   | postfix-expression '[' constant-expression ']'            {
-                                                                $$ = new PropertyIndexNode($1, $3);
+                                                                $$ = new BinaryOpExpNode($1, $3, "[]");
                                                               }
   ;
 
 primary-expression
-  : IDEN                                                      { $$ = $1; puts("primary-expression");}
+  : IDEN                                                      { $$ = $1;}
   | INT_NUM                                                   { $$ = $1;}
   | DOUBLE_NUM                                                { $$ = $1;}
   | CONST_STR                                                 { $$ = $1;}
@@ -226,11 +211,9 @@ primary-expression
                                                               }
   | '(' constant-expression ')'                               {
                                                                 $$ = $2;
-                                                                puts("constant-expression");
                                                               }
   | function-expression                                       {
                                                                 $$ = $1;
-                                                                puts("function-expression");
                                                               }
   ;
 
@@ -243,16 +226,14 @@ primary-type
   ;
 
 newtype-definition
-  : ALIAS IDEN ASSIGN type                                    {
+  : ALIAS IDEN '=' type                                       {
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), $4);
                                                                 delete($1);
-                                                                delete($3);
                                                               }
-  | TYPE IDEN ASSIGN IDEN FUNC_BRAC type-comma-list ']'       {
+  | TYPE IDEN '=' IDEN FUNC_BRAC type-comma-list ']'          {
                                                                 Node* cons = new ConsDefNode(($4)->GetStrTok(), $6);
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), cons);
                                                                 delete($1);  // token 'type'
-                                                                delete($3);  // token '='
                                                                 delete($5);  // token FUNC_BRAC
                                                               }
   | newtype-definition '|' IDEN FUNC_BRAC type-comma-list ']' {
@@ -295,18 +276,10 @@ declaration
   | IDEN function-literal                                     {
                                                                 $$ = new FuncDef(($1)->GetStrTok(), $2);
                                                               }
-  | IDEN ASSIGN newtype-expression ';'                        {
-                                                                $$ = new VarDef(($1)->GetStrTok(), $3);
-                                                              }
   | type-iden-pair ';'                                        { $$ = new VarDef($1, NULL);}
-  | type-iden-pair ASSIGN initializer ';'                     {
+  | type-iden-pair '=' assignment-expression                  {
                                                                 $$ = new VarDef($1, $3);
-                                                                puts("declaration");
                                                               }
-  ;
-
-initializer
-  : assignment-expression                                     { $$ = $1; }
   ;
 
 function-literal
@@ -341,10 +314,10 @@ expression-comma-list
   ;
 
 statement
-  : assignment-expression ';'                                           { $$ = $1; puts("assignment");}
-  | selection-statement   ';'                                           { $$ = $1;}
+  : assignment-expression                                               { $$ = $1;}
+  | selection-statement                                                 { $$ = $1;}
   | behavior-statement    ';'                                           { $$ = $1;}
-  | event-statement       ';'                                           { $$ = $1;}
+  | event-statement                                                     { $$ = $1;}
   | jump-statement        ';'                                           { $$ = $1;}
   ;
 
@@ -353,7 +326,6 @@ compound-statement
   | statement compound-statement                                        {
                                                                           $$ = $2;
                                                                           ($$)->Add($1); 
-                                                                          puts("compound-statement");
                                                                         }
   | declaration compound-statement                                      {
                                                                           $$ = $2;
@@ -364,9 +336,6 @@ compound-statement
 function-expression
   : '(' IDEN expression-comma-list ')'                                  { 
                                                                           $$ = new FuncExp(($2)->GetStrTok(), $3);
-                                                                        }
-  | '(' IDEN ')'                                                        {
-                                                                          $$ = new FuncExp(($2)->GetStrTok(), NULL);
                                                                         }
   | '(' function-literal expression-comma-list ')'                      {
                                                                           $$ = new FuncExp($2, $3);

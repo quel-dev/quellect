@@ -45,40 +45,34 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ASSIGN = 258,
-    EQ = 259,
-    LT = 260,
-    GT = 261,
-    LE = 262,
-    GE = 263,
-    LOGOR = 264,
-    LOGAND = 265,
-    PLUS = 266,
-    MINUS = 267,
-    MULT = 268,
-    DIVIDE = 269,
-    MOD = 270,
-    LOGNOT = 271,
-    ALIAS = 272,
-    TYPE = 273,
-    INT = 274,
-    DOUBLE = 275,
-    STRING = 276,
-    NUL = 277,
-    FUNC = 278,
-    FUNC_BRAC = 279,
-    IF = 280,
-    ELSE = 281,
-    SWITCH = 282,
-    EVENT = 283,
-    BEHAV = 284,
-    RETURN = 285,
-    BREAK = 286,
-    CONTINUE = 287,
-    IDEN = 288,
-    INT_NUM = 289,
-    DOUBLE_NUM = 290,
-    CONST_STR = 291
+    EQ = 258,
+    LT = 259,
+    GT = 260,
+    LE = 261,
+    GE = 262,
+    LOGOR = 263,
+    LOGAND = 264,
+    LOGNOT = 265,
+    ALIAS = 266,
+    TYPE = 267,
+    INT = 268,
+    DOUBLE = 269,
+    STRING = 270,
+    NUL = 271,
+    FUNC = 272,
+    FUNC_BRAC = 273,
+    IF = 274,
+    ELSE = 275,
+    SWITCH = 276,
+    EVENT = 277,
+    BEHAV = 278,
+    RETURN = 279,
+    BREAK = 280,
+    CONTINUE = 281,
+    IDEN = 282,
+    INT_NUM = 283,
+    DOUBLE_NUM = 284,
+    CONST_STR = 285
   };
 #endif
 
@@ -94,7 +88,7 @@ union YYSTYPE
   DoubleToken* double_token;
   StringToken* token;
 
-#line 98 "yyparse.tab.hpp" /* yacc.c:1909  */
+#line 92 "yyparse.tab.hpp" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

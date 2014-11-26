@@ -30,12 +30,6 @@ inline short MakeToken();
 ">="        { Return(GE);}
 "||"        { Return(LOGOR);}
 "&&"        { Return(LOGAND);}
-"+"         { Return(PLUS);}
-"-"         { Return(MINUS);}
-"*"         { Return(MULT);}
-"/"         { Return(DIVIDE);}
-"%"         { Return(MOD);}
-"!"         { Return(LOGNOT);}  
 "alias"     { Return(ALIAS);}
 "type"      { Return(TYPE);}
 "int"       { Return(INT);}
