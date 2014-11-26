@@ -13,7 +13,7 @@ Value Enviroment::get(std::string id) {
   // throw an exception
 }
 
-void Enviroment::set_father_of(Enviroment* oth) {
+void Enviroment::set_father(Enviroment* oth) {
   this->father = oth;
 }
 

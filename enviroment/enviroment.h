@@ -7,6 +7,6 @@ class Enviroment {
   public:
   void set(std::string, Value);
   Value get(std::string);
-  void set_father_of(Enviroment*);
+  void set_father(Enviroment*);
 };
 
