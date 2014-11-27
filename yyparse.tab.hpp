@@ -81,7 +81,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 22 "yyparse.ypp" /* yacc.c:1909  */
+#line 20 "yyparse.ypp" /* yacc.c:1909  */
 
   Node* node;
   IntToken* int_token;
@@ -97,6 +97,6 @@ union YYSTYPE
 
 extern YYSTYPE yylval;
 
-int yyparse (void);
+int yyparse (Node*& root);
 
 #endif /* !YY_YY_YYPARSE_TAB_HPP_INCLUDED  */

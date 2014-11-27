@@ -1,4 +1,5 @@
 #include "node.h"
+#include "util.h"
 
 const std::string& Node::GetType(){
   return node_type_;
@@ -26,6 +27,17 @@ void ListNode::CopyList(std::vector<Node*>* nodes) {
   }
 }
 
+Value ListNode::Eval(Environment* env) {
+  puts(node_type_.c_str());
+  if (node_type_ == "statement_list") {
+    Value val;
+    for (int i = 0 ; i < nodes_.size() ; ++i) {
+      val = nodes_[i]->Eval(env);
+    }
+    return val;
+  }
+}
+
 AssignExpNode::AssignExpNode(Node *iden, Node* value):
     iden_(iden), value_(value) {
   node_type_ = "assign-exp";
@@ -36,6 +48,20 @@ BinaryOpExpNode::BinaryOpExpNode(
   operand1_ = operand1;
   operand2_ = operand2;
   node_type_ = type;   
+}
+
+Value BinaryOpExpNode::Eval(Environment* env) {
+  puts(node_type_.c_str());
+  if (node_type_ == "=") {
+    Value val = operand2_->Eval(env);
+    printf("assign iden: %s\n", operand1_->GetStrTok().c_str());
+    env->set(operand1_->GetStrTok(), val);
+    return val;
+  } else {
+    Value val1 = operand1_->Eval(env); 
+    Value val2 = operand2_->Eval(env); 
+    return CalcBinaryOp(node_type_, val1, val2);
+  }
 }
 
 UnaryOpExpNode::UnaryOpExpNode(
@@ -147,8 +173,10 @@ IntToken::IntToken(int token_id, int value):
   node_type_ = "int_token";    
 }
 
-int IntToken::GetIntTok() {
-  return value_;
+Value IntToken::Eval(Environment* env) {
+  puts(node_type_.c_str());
+  printf("%d\n", value_);
+  return Value(value_);
 }
 
 DoubleToken::DoubleToken(int token_id, double value):
@@ -156,15 +184,27 @@ DoubleToken::DoubleToken(int token_id, double value):
   node_type_ = "double_token";    
 }
 
-double DoubleToken::GetDoubleTok() {
-  return value_;
+Value DoubleToken::Eval(Environment* env) {
+  puts(node_type_.c_str());
+  printf("%lf\n", value_);
+  return Value(value_);
 }
 
 StringToken::StringToken(int token_id, const std::string& value):
     token_id_(token_id), value_(value){
-  node_type_ = "double_token";    
+  node_type_ = "string_token";    
 }
 
 const std::string& StringToken::GetStrTok() {
   return value_;
+}
+
+Value StringToken::Eval(Environment* env) {
+  puts(node_type_.c_str());
+  printf("%s\n",value_.c_str());
+  if(env->ContainsVar(value_)) {
+    return env->get(value_);
+  } else {
+    fprintf(stderr, "undefined variable: %s\n", value_.c_str());
+  }
 }

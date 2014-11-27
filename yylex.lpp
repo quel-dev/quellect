@@ -102,10 +102,10 @@ template<short Tok>
 inline short MakeToken() {
   switch(Tok) {
     case INT_NUM:
-      yylval.int_token = new IntToken(Tok, str_to_d(yytext));
+      yylval.int_token = new IntToken(Tok, str_to_32(yytext));
     break;
     case DOUBLE_NUM:
-      yylval.double_token = new DoubleToken(Tok, str_to_32(yytext));
+      yylval.double_token = new DoubleToken(Tok, str_to_d(yytext));
     break;
     default:
       yylval.token = new StringToken(Tok, yytext);

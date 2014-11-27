@@ -11,9 +11,7 @@
  
 #include <cstdio>
 
-Node* root = NULL; 
-
-void yyerror(const char* msg) {
+void yyerror(Node* root, const char* msg) {
   fprintf(stderr, "%s\n", msg);
 }
 
@@ -25,6 +23,8 @@ void yyerror(const char* msg) {
   DoubleToken* double_token;
   StringToken* token;
 }
+
+%parse-param { Node*& root }
 
 %start start
 
@@ -323,13 +323,13 @@ statement
 
 compound-statement
   : /* empty */                                                         { $$ = new ListNode("statement_list");}
-  | statement compound-statement                                        {
-                                                                          $$ = $2;
-                                                                          ($$)->Add($1); 
+  | compound-statement statement                                        {
+                                                                          $$ = $1;
+                                                                          ($$)->Add($2); 
                                                                         }
-  | declaration compound-statement                                      {
-                                                                          $$ = $2;
-                                                                          ($$)->Add($1);
+  | compound-statement declaration                                      {
+                                                                          $$ = $1;
+                                                                          ($$)->Add($2);
                                                                         }
   ;
 

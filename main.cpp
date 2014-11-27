@@ -17,16 +17,8 @@
 
 #include <memory>
 #include <vector>
-/*
-class Environment {
-  void assign(Node *left_value, Node *right_value) {
-    
-    variable_table.set(left_value->get_identifier(), right_value->eval());
-  }
-  protected:
-    VarTable variable_table;
-}
 
+/*
 void Dfs(Node *root) {
   switch(root->type) {
     //....
@@ -40,6 +32,7 @@ void eval(void) {
 }
 */
 
+
 int main(int argc, char* argv[]) {
   if (argc < 2) {
     puts("filename missing.");
@@ -51,9 +44,12 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   yyin = file;
-  yyparse();
+  Node* root = NULL;
+  yyparse(root);
   // after calling yyparse, the program has been successfully
-  // parsed and the root of AST is stored in node* root.
+  // parsed and the root of AST is stored in Node* root.
+  Environment global;
+  (root->Eval(&global)).display();
   fclose(file);
   return 0;
 }

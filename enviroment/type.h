@@ -28,7 +28,7 @@ class Int : public Value {
 class Double : public Value {
   double data;
   public:
-  Double(int data):data(data){};
+  Double(double data):data(data){};
   double get_value(void);
 };
 

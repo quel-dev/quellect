@@ -1,5 +1,12 @@
+#include <cstdio>
+
 #include <string>
 #include <vector>
+
+#ifndef ENVIRONMENT_H_
+#define ENVIRONMENT_H_
+#include "environment.h"
+#endif
 
 class Node {
  public:
@@ -9,10 +16,9 @@ class Node {
   virtual void CopyList(std::vector<Node*>* items){}
   virtual const std::string& GetPairIden(){}
   virtual Node* GetPairType(){}
-  virtual int GetIntTok(){}
-  virtual double GetDoubleTok(){}
   virtual const std::string& GetStrTok(){}
   virtual void AddBranch(Node* condition, Node* action){}
+  virtual Value Eval(Environment* environment){puts(node_type_.c_str());};
  protected:
   std::string node_type_;
 };
@@ -24,6 +30,7 @@ class ListNode : public Node {
   void Add(Node* node);
   // copy nodes_ to nodes
   void CopyList(std::vector<Node*>* nodes);
+  Value Eval(Environment* env);
  protected:
   std::vector<Node*> nodes_;
 };
@@ -41,6 +48,7 @@ class AssignExpNode : public Node {
 class BinaryOpExpNode : public Node {
  public:
   BinaryOpExpNode(Node *operand1, Node* operand2, const std::string& type);
+  Value Eval(Environment* env);
  protected:
   Node* operand1_;
   Node* operand2_;
@@ -194,7 +202,7 @@ class EventNode : public Node {
 class IntToken : public Node {
  public:
   IntToken(int token_id, int value);
-  int GetIntTok();
+  Value Eval(Environment* env);
  protected:
   int token_id_;
   int value_;
@@ -203,7 +211,7 @@ class IntToken : public Node {
 class DoubleToken : public Node {
  public:
   DoubleToken(int token_id, double value);
-  double GetDoubleTok();
+  Value Eval(Environment* env);
  protected:
   int token_id_;
   double value_;
@@ -213,6 +221,7 @@ class StringToken : public Node {
  public:
   StringToken(int token_id, const std::string& value);
   const std::string& GetStrTok();
+  Value Eval(Environment* env);
  protected:
   int token_id_;
   const std::string value_;
