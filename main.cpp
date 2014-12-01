@@ -18,21 +18,6 @@
 #include <memory>
 #include <vector>
 
-/*
-void Dfs(Node *root) {
-  switch(root->type) {
-    //....
-    case ASSIGNMENT: current_env.assign(root->left_value, root->right_value);
-  }
-}
-
-void eval(void) {
-  Dfs(root);
-
-}
-*/
-
-
 int main(int argc, char* argv[]) {
   if (argc < 2) {
     puts("filename missing.");

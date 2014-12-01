@@ -28,7 +28,7 @@ void ListNode::CopyList(std::vector<Node*>* nodes) {
 }
 
 Value ListNode::Eval(Environment* env) {
-  puts(node_type_.c_str());
+  //puts(node_type_.c_str());
   if (node_type_ == "statement_list") {
     Value val;
     for (int i = 0 ; i < nodes_.size() ; ++i) {
@@ -36,11 +36,6 @@ Value ListNode::Eval(Environment* env) {
     }
     return val;
   }
-}
-
-AssignExpNode::AssignExpNode(Node *iden, Node* value):
-    iden_(iden), value_(value) {
-  node_type_ = "assign-exp";
 }
 
 BinaryOpExpNode::BinaryOpExpNode(
@@ -51,10 +46,10 @@ BinaryOpExpNode::BinaryOpExpNode(
 }
 
 Value BinaryOpExpNode::Eval(Environment* env) {
-  puts(node_type_.c_str());
+  //puts(node_type_.c_str());
   if (node_type_ == "=") {
     Value val = operand2_->Eval(env);
-    printf("assign iden: %s\n", operand1_->GetStrTok().c_str());
+    //printf("assign iden: %s\n", operand1_->GetStrTok().c_str());
     env->set(operand1_->GetStrTok(), val);
     return val;
   } else {
@@ -109,7 +104,7 @@ FuncDef::FuncDef(const std::string& func_iden, Node* func_literal):
 
 FuncExp::FuncExp(const std::string& func_iden, Node* parameters):
     func_iden_(func_iden), parameters_(parameters){
-  node_type_ = "func_expression";    
+  node_type_ = "func_expression";
   anonymous = false;
 }
 
@@ -174,8 +169,8 @@ IntToken::IntToken(int token_id, int value):
 }
 
 Value IntToken::Eval(Environment* env) {
-  puts(node_type_.c_str());
-  printf("%d\n", value_);
+  //puts(node_type_.c_str());
+  //printf("%d\n", value_);
   return Value(value_);
 }
 
@@ -185,8 +180,8 @@ DoubleToken::DoubleToken(int token_id, double value):
 }
 
 Value DoubleToken::Eval(Environment* env) {
-  puts(node_type_.c_str());
-  printf("%lf\n", value_);
+  //puts(node_type_.c_str());
+  //printf("%lf\n", value_);
   return Value(value_);
 }
 
@@ -200,11 +195,11 @@ const std::string& StringToken::GetStrTok() {
 }
 
 Value StringToken::Eval(Environment* env) {
-  puts(node_type_.c_str());
-  printf("%s\n",value_.c_str());
+  //puts(node_type_.c_str());
+  //printf("%s\n",value_.c_str());
   if(env->ContainsVar(value_)) {
     return env->get(value_);
   } else {
-    fprintf(stderr, "undefined variable: %s\n", value_.c_str());
+    //fprintf(stderr, "undefined variable: %s\n", value_.c_str());
   }
 }

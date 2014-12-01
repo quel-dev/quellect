@@ -23,7 +23,7 @@ class Node {
   std::string node_type_;
 };
 
-class ListNode : public Node {
+class ListNode : public Node { 
  public:
   ListNode(const std::string& type, Node* item);
   ListNode(const std::string& type);
@@ -33,15 +33,6 @@ class ListNode : public Node {
   Value Eval(Environment* env);
  protected:
   std::vector<Node*> nodes_;
-};
-
-// e.g. a or a = b = c
-class AssignExpNode : public Node {
- public:
-  AssignExpNode(Node *iden, Node* value);
- protected:
-  Node* iden_;
-  Node* value_;
 };
 
 // e.g. a + b

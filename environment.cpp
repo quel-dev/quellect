@@ -3,7 +3,7 @@
 #include "environment.h"
 
 void Value::display() {
-  puts("display!");
+  //puts("display!");
   switch (value_type_) {
     case INT_TYPE:
       printf("%d\n", int_);
@@ -15,7 +15,6 @@ void Value::display() {
 }
 
 void Environment::set(const std::string& iden, const Value& value) {
-  printf("set iden: %s\n", iden.c_str());
   if(variable_table_.find(iden) != variable_table_.end()) {
     variable_table_[iden] = value;
     // add to a variety of tables...

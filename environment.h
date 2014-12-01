@@ -10,8 +10,12 @@ struct Value {
   Value(int data):value_type_(INT_TYPE) { int_ = data; }
   Value(double data):value_type_(DOUBLE_TYPE) { double_ = data; }
   union {
-    int int_;
-    double double_;
+    int int_;   // -> int* int_;
+    double double_; // -> double* double;
+    //string* string_;
+    //Function* function_;
+    //NewType* newtype_;
+    //Array* array_;
   };
   int value_type_;
   void display();

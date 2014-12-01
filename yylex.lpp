@@ -11,6 +11,8 @@
 
 #include "assert.h"
 
+#include <string>
+
 template<short Tok>
 inline short MakeToken();
 
@@ -47,6 +49,14 @@ inline short MakeToken();
 [A-Za-z_]+[0-9]*  { Return(IDEN);}
 [0-9]+      { Return(INT_NUM);}
 [0-9]*\.[0-9]+ { Return(DOUBLE_NUM);}
+\"[^"]*.    { 
+              if (yytext[yyleng-2] == '\\') {
+                yyless(yyleng-1);
+                yymore();
+              } else {
+                Return(CONST_STR);
+              }
+            }
 "//".*\n    ;
 [ \t\n]     ;
 .           {return yytext[0];}
@@ -98,6 +108,21 @@ int str_to_32(char* s) {
   return value;
 }
 
+std::string str_to_const_str(const char* s) {
+  assert(s[0] == '\"');
+  std::string const_str = "";
+  int len = strlen(s);
+  for (int i = 1 ; i + 1 < len ; ++i) {  // ignore the first and the last "
+    if (s[i] != '\\') {
+      const_str += s[i];
+    } else {
+      const_str += s[i+1];
+      ++i;
+    }
+  }
+  return const_str;
+}
+
 template<short Tok>
 inline short MakeToken() {
   switch(Tok) {
@@ -107,8 +132,11 @@ inline short MakeToken() {
     case DOUBLE_NUM:
       yylval.double_token = new DoubleToken(Tok, str_to_d(yytext));
     break;
+    case CONST_STR:
+      yylval.token = new StringToken(Tok, str_to_const_str(yytext));
+    break;
     default:
       yylval.token = new StringToken(Tok, yytext);
-  } 
+  }
   return Tok;
 }
