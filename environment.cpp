@@ -2,14 +2,48 @@
 
 #include "environment.h"
 
+Value::Value(int data):value_type_(INT_TYPE) {
+  int_ = new int;
+  *int_ = data;
+}
+
+Value::Value(double data):value_type_(DOUBLE_TYPE) {
+  double_ = new double;
+  *double_ = data;
+}
+
+Value::Value(const std::string& data):value_type_(STRING_TYPE) {
+  string_ = new std::string(data);
+}
+
+Value::Value(const Value& v) {
+  value_type_ = v.value_type_;
+  switch (v.value_type_) {
+    case INT_TYPE:
+      int_ = new int;
+      *int_ = *v.int_;
+    break;
+    case DOUBLE_TYPE:
+      double_ = new double;
+      *double_ = *v.double_;
+    break;
+    case STRING_TYPE:
+      string_ = new std::string(*v.string_);
+    break;
+  }
+}
+
 void Value::display() {
   //puts("display!");
   switch (value_type_) {
     case INT_TYPE:
-      printf("%d\n", int_);
+      printf("%d\n", *int_);
     break;
     case DOUBLE_TYPE:
-      printf("%lf\n", double_);
+      printf("%lf\n", *double_);
+    break;
+    case STRING_TYPE:
+      printf("%s\n", string_->c_str());
     break;
   }
 }

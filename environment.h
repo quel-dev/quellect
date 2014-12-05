@@ -2,20 +2,31 @@
 #include <map>
 
 enum {
-  INT_TYPE, DOUBLE_TYPE
+  INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE
 };
+
+/*
+class Array {
+ public:
+  Value& operator[] (int index) {
+    
+  }
+};
+*/
 
 struct Value {
   Value():value_type_(-1){}
-  Value(int data):value_type_(INT_TYPE) { int_ = data; }
-  Value(double data):value_type_(DOUBLE_TYPE) { double_ = data; }
+  Value(int data);
+  Value(double data);
+  Value(const std::string& data);
+  Value(const Value& value);
   union {
-    int int_;   // -> int* int_;
-    double double_; // -> double* double;
-    //string* string_;
+    int* int_;
+    double* double_;
+    std::string* string_;
+    //Array* array_;
     //Function* function_;
     //NewType* newtype_;
-    //Array* array_;
   };
   int value_type_;
   void display();
