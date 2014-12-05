@@ -12,7 +12,7 @@ Value CalcBinaryOp(const std::string& op_type,
         case DOUBLE_TYPE:
           return Value(*operand1.double_ + *operand2.double_);
         case STRING_TYPE:
-          return Value(*operand1.string_ + *operande2.string_);
+          return Value(*operand1.string_ + *operand2.string_);
         break;
       } 
     }
@@ -25,7 +25,7 @@ Value CalcBinaryOp(const std::string& op_type,
           return Value(*operand1.double_ - *operand2.double_);
         break;
         case STRING_TYPE:
-          return Value(*operand1.string_ + *operande2.string_);
+          return Value(*operand1.string_ + *operand2.string_);
         break;
       } 
     }
