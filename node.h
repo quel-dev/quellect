@@ -19,6 +19,7 @@ class Node {
   virtual const std::string& GetStrTok(){}
   virtual void AddBranch(Node* condition, Node* action){}
   virtual Value Eval(Environment* environment){puts(node_type_.c_str());};
+  virtual std::vector<Value> EvalToList(Environment*){};
  protected:
   std::string node_type_;
 };
@@ -31,6 +32,7 @@ class ListNode : public Node {
   // copy nodes_ to nodes
   void CopyList(std::vector<Node*>* nodes);
   Value Eval(Environment* env);
+  std::vector<Value> EvalToList(Environment* env);
  protected:
   std::vector<Node*> nodes_;
 };
@@ -74,6 +76,8 @@ class TypeDefNode : public Node {
  public:
   TypeDefNode(const std::string& iden, Node* cons);
   void Add(Node* cons);
+  Value Eval(Environment *env);
+  const std::string& GetStrTok(){return iden_;}
  protected:
   const std::string iden_;
   std::vector<Node*> cons_list_;
@@ -82,6 +86,8 @@ class TypeDefNode : public Node {
 class ConsDefNode : public Node {
  public:
   ConsDefNode(const std::string& iden, Node* type_list);
+  const std::string& GetStrTok(){return iden_;}
+  Value Eval(Environment *env);
  protected:
   const std::string iden_;
   std::vector<Node*> type_list_;
@@ -90,56 +96,32 @@ class ConsDefNode : public Node {
 class NewTypeExpNode : public Node {
  public:
   NewTypeExpNode(const std::string& cons_iden, Node* exp_list);
+  Value Eval(Environment *env);
  protected:
   const std::string cons_iden_;
   std::vector<Node*> exp_list_;
 };
 
-class FuncLiteral : public Node {
- public:
-  FuncLiteral(Node* parameters, Node* statements); 
- protected:
-  Node* parameters_;
-  Node* statements_;
-};
-
 class FuncDef : public Node {
  public:
-  FuncDef(const std::string& func_iden, Node* func_literal);
+  FuncDef(const std::string& func_iden, Node* parameters, Node* statements);
+  Value Eval(Environment* env);
  protected:
   const std::string func_iden_;
-  Node* func_literal_;
+  Node* parameters_;
+  Node* literal_;
 };
 
 class FuncExp : public Node {
  public:
   FuncExp(const std::string& func_iden, Node* parameters);
   FuncExp(Node* func_literal, Node* parameters);
+  Value Eval(Environment* env);
  protected:
   bool anonymous;
   const std::string func_iden_;
   Node* func_literal_;
   Node* parameters_;
-};
-
-class TypeIdenPair : public Node {
- public:
-  TypeIdenPair(Node* type, const std::string& iden);
-  const std::string& GetPairIden();
-  Node* GetPairType();
- protected:
-  const std::string iden_;
-  Node* type_;
-};
-
-class VarDef : public Node {
- public:
-  VarDef(const std::string& var_iden, Node* initializer);
-  VarDef(Node* pair, Node* initializer);
- protected:
-  const std::string var_iden_;
-  Node* type_;
-  Node* initializer_;
 };
 
 class IfNode : public Node {

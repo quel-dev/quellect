@@ -1,0 +1,16 @@
+type vector = cons::<int, int>
+type two_vector = cons_two::<vector, vector>
+
+function add(cons::<x, y>) {
+  return x + y;
+}
+
+function get_sum(cons_two::<a, cons::<x, y>>) {
+  return x + y;
+}
+
+tmp = cons::<1, 2>;
+add(tmp);
+
+tmp2 = cons_two::<tmp, cons_two<3, 4>>;
+get_sum(tmp2);

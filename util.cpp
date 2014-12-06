@@ -33,3 +33,12 @@ Value CalcBinaryOp(const std::string& op_type,
     // type conversion
   }
 }
+
+bool CheckParamsMatched(Function* func, const std::vector<Value> values, Environment* env = NULL) {
+  return true;
+}
+
+Function* SelectFunction(const std::string& func_iden, const std::vector<Value>& values) {
+  return NULL;
+}
+

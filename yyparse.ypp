@@ -74,10 +74,8 @@ void yyerror(Node* root, const char* msg) {
 %type<node> newtype-definition
 %type<node> type
 %type<node> type-comma-list
-%type<node> type-iden-pair
 %type<node> newtype-expression
 %type<node> declaration
-%type<node> function-literal
 %type<node> parameter-pair-comma-list
 %type<node> expression
 %type<node> expression-comma-list
@@ -89,6 +87,8 @@ void yyerror(Node* root, const char* msg) {
 %type<node> event-statement
 %type<node> jump-statement
 %type<node> function-expression
+%type<node> r-type-definition
+%type<node> r-type-definition-list
 
 
 %%
@@ -230,13 +230,13 @@ newtype-definition
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), $4);
                                                                 delete($1);
                                                               }
-  | TYPE IDEN '=' IDEN FUNC_BRAC type-comma-list ']'          {
+  | TYPE IDEN '=' IDEN FUNC_BRAC type-comma-list '>'          {
                                                                 Node* cons = new ConsDefNode(($4)->GetStrTok(), $6);
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), cons);
                                                                 delete($1);  // token 'type'
                                                                 delete($5);  // token FUNC_BRAC
                                                               }
-  | newtype-definition '|' IDEN FUNC_BRAC type-comma-list ']' {
+  | newtype-definition '|' IDEN FUNC_BRAC type-comma-list '>' {
                                                                 $$ = $1;
                                                                 Node* cons = new ConsDefNode(($3)->GetStrTok(), $5);
                                                                 ($$)->Add(cons);
@@ -258,51 +258,42 @@ type-comma-list
   ;
 
 newtype-expression
-  : IDEN '<' expression-comma-list '>'                        {
+  : FUNC_BRAC '<' expression-comma-list '>'                   {
                                                                 $$ = new NewTypeExpNode(($1)->GetStrTok(), $3);
                                                               }
   ;
 
-type-iden-pair
-  : type IDEN                                                 {
-                                                                $$ = new TypeIdenPair($1, ($2)->GetStrTok());
-                                                              }
-  ;
-
 declaration
-  : newtype-definition ';'                                    {
-                                                                $$ = $1;
-                                                              }
-  | IDEN function-literal                                     {
-                                                                $$ = new FuncDef(($1)->GetStrTok(), $2);
-                                                              }
-  | type-iden-pair ';'                                        { $$ = new VarDef($1, NULL);}
-  | type-iden-pair '=' assignment-expression                  {
-                                                                $$ = new VarDef($1, $3);
-                                                              }
+  : newtype-definition ';'                                                  {
+                                                                              $$ = $1;
+                                                                            }
+  | FUNC IDEN '(' parameter-pair-comma-list ')' '{' compound-statement '}'  {
+                                                                              $$ = new FuncDef(($1)->GetStrTok(), $4, $7);
+                                                                            }
   ;
-
-function-literal
-  : FUNC_BRAC parameter-pair-comma-list ']' '{' compound-statement  '}' {
-                                                                          $$ = new FuncLiteral($2, $5);
-                                                                          delete($1);
-                                                                        }
-  ;
-
 
 parameter-pair-comma-list
-  : type-iden-pair                                                      {
+  : r-type-definition                                                   {
                                                                           $$ = new ListNode("para_list", $1);
                                                                         }
-  | parameter-pair-comma-list ',' type-iden-pair                        {
+  | parameter-pair-comma-list ',' r-type-definition                     {
                                                                           $$ = $1;
                                                                           ($$)->Add($3);
                                                                         }
   ;
 
+r-type-definition
+  : IDEN                                                                { }
+
+  | FUNC_BRAC r-type-definition-list '>'                                { }
+
+r-type-definition-list
+  : r-type-definition                                                   { }
+
+  | r-type-definition ',' r-type-definition-list                        { }
+
 expression
   : constant-expression                                                 { $$ = $1;}
-  | function-literal                                                    { $$ = $1;}
   ;
 
 expression-comma-list
@@ -336,12 +327,6 @@ compound-statement
 function-expression
   : '(' IDEN expression-comma-list ')'                                  { 
                                                                           $$ = new FuncExp(($2)->GetStrTok(), $3);
-                                                                        }
-  | '(' function-literal expression-comma-list ')'                      {
-                                                                          $$ = new FuncExp($2, $3);
-                                                                        }
-  | '(' function-literal ')'                                            {
-                                                                          $$ = new FuncExp(($2)->GetStrTok(), NULL);
                                                                         }
   ;
 

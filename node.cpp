@@ -1,6 +1,8 @@
 #include "node.h"
 #include "util.h"
 
+#define ANONY_IDEN "/"
+
 const std::string& Node::GetType(){
   return node_type_;
 }
@@ -35,6 +37,16 @@ Value ListNode::Eval(Environment* env) {
       val = nodes_[i]->Eval(env);
     }
     return val;
+  }
+}
+
+std::vector<Value> ListNode::EvalToList(Environment* env) {
+  if (node_type_ == "statement_list" || node_type_ == "exp_list") {
+    std::vector<Value> ret;
+    for (int i = 0 ; i < nodes_.size() ; ++i) {
+      ret.push_back(nodes_[i]->Eval(env));
+    }
+    return ret;
   }
 }
 
@@ -94,11 +106,8 @@ NewTypeExpNode::NewTypeExpNode(const std::string& cons_iden, Node* exp_list):
   exp_list->CopyList(&exp_list_);
 }
 
-FuncLiteral::FuncLiteral(Node* parameters, Node* statements):
-    parameters_(parameters), statements_(statements) {}
-
-FuncDef::FuncDef(const std::string& func_iden, Node* func_literal):
-    func_iden_(func_iden), func_literal_(func_literal) {
+FuncDef::FuncDef(const std::string& func_iden, Node* parameters, Node* literal):
+    func_iden_(func_iden), parameters_(parameters), literal_(literal) {
   node_type_ = "func_definition";
 }
 
@@ -112,30 +121,6 @@ FuncExp::FuncExp(Node* func_literal, Node* parameters):
     func_literal_(func_literal), parameters_(parameters){
   node_type_ = "func_expression";    
   anonymous = true;
-}
-
-TypeIdenPair::TypeIdenPair(Node* type, const std::string& iden):
-    iden_(iden), type_(type){
-  node_type_ = "type_iden_pair";    
-}
-
-const std::string& TypeIdenPair::GetPairIden() {
-  return iden_;
-}
-
-Node* TypeIdenPair::GetPairType() {
-  return type_;
-}
-
-VarDef::VarDef(const std::string& var_iden, Node* initializer):
-    var_iden_(var_iden), initializer_(initializer) {
-  node_type_ = "var_def";
-}
-
-VarDef::VarDef(Node* pair, Node* initializer):
-    var_iden_(pair->GetPairIden()), initializer_(initializer) {
-  type_ = pair->GetPairType();
-  node_type_ = "var_def";
 }
 
 IfNode::IfNode(Node* condition, Node* if_branch, Node* else_branch):
@@ -203,3 +188,73 @@ Value StringToken::Eval(Environment* env) {
     //fprintf(stderr, "undefined variable: %s\n", value_.c_str());
   }
 }
+
+Value FuncDef::Eval(Environment* env) {
+  Function func;
+  func.context = new Environment;
+  *(func.context) = *env;
+  func.literal = literal_;
+  func.param_list = parameters_;
+  Value value(func);
+  if (func_iden_ != ANONY_IDEN) {
+    env->set(func_iden_, value);
+  }
+  return value;
+}
+
+Value FuncExp::Eval(Environment* env) {
+  std::vector<Value> params = parameters_->EvalToList(env);
+  Function* func = SelectFunction(func_iden_, params);
+}
+
+Value TypeDefNode::Eval(Environment* env) {
+  if (env->ContainsType(iden_)) {
+    fprintf(stderr, "Redefined type %s\n", iden_.c_str());
+  }
+  std::vector<std::string> now;
+  for (size_t i = 0; i < cons_list_.size(); i++) {
+    cons_list_[i]->Eval(env);
+    now.push_back(cons_list_[i]->GetStrTok());
+    env->SetConsOfType(cons_list_[i]->GetStrTok(), iden_);
+  }
+  env->SetType(iden_, now);
+  return Value(-1);
+}
+
+Value ConsDefNode::Eval(Environment* env) {
+  if (env->ContainsCons(iden_)) {
+    fprintf(stderr, "Redefined constructor %s\n", iden_.c_str());
+  }
+  std::vector<std::string> now;
+  for (size_t i = 0; i < type_list_.size(); i++) {
+    now.push_back(type_list_[i]->GetStrTok());
+  }
+  env->SetCons(iden_, now);
+  return Value(-1);
+}
+
+Value NewTypeExpNode::Eval(Environment* env) {
+  if (!env->ContainsCons(cons_iden_)) {
+     fprintf(stderr, "Undefined constructor %s\n", cons_iden_.c_str());
+     return Value(-1);
+  }
+  
+  std::vector<std::string> cons_type = env->GetCons(cons_iden_);
+
+  if (cons_type.size() != exp_list_.size()) {
+     fprintf(stderr, "Incorrect number of parameters for constructor %s\n", cons_iden_.c_str());
+     return Value(-1);
+  }
+
+  Object now(cons_iden_);
+  for (size_t i = 0; i < exp_list_.size(); i++) {
+    Value sub_value = exp_list_[i]->Eval(env);
+    if (env->GetTypeByCons(sub_value.GetConsName()) != cons_type[i]) {
+      fprintf(stderr, "Unmatched parameters for constructor %s\n", cons_iden_.c_str());
+      return Value(-1);
+    }
+    now.Add(sub_value);
+  }
+  return Value(now);
+}
+

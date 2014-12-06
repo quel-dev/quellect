@@ -39,7 +39,7 @@ inline short MakeToken();
 "string"    { Return(STRING);}
 "null"      { Return(NUL);}
 "func"      { Return(FUNC);}
-"::["       { Return(FUNC_BRAC);}
+"::<"       { Return(FUNC_BRAC);}
 "if"        { Return(IF);}
 "else"      { Return(ELSE);}
 "switch"    { Return(SWITCH);}
