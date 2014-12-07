@@ -50,19 +50,33 @@ Value::Value(const Value& v) {
 }
 
 void Value::display() {
-  //puts("display!");
   switch (value_type_) {
     case INT_TYPE:
-      printf("%d\n", *int_);
+      printf("%d", *int_);
     break;
     case DOUBLE_TYPE:
-      printf("%lf\n", *double_);
+      printf("%lf", *double_);
     break;
     case STRING_TYPE:
-      printf("%s\n", string_->c_str());
+      printf("%s", string_->c_str());
     break;
     case FUNCTION_TYPE:
-      printf("[Function]\n");
+      printf("[Function]");
+    break;
+    case OBJECT_TYPE:
+      if (object_->values.empty()) {
+        printf("%s\n", object_->cons_name.c_str());
+      } else {
+        printf("%s::<", object_->cons_name.c_str());
+        for (size_t i = 0; i < object_->values.size(); i++) {
+          object_->values[i].display();
+          if (i != object_->values.size() - 1) {
+            printf(",");
+          }
+        }
+        printf(">");
+      }
+    break;
   }
 }
 
@@ -160,6 +174,9 @@ bool Environment::ContainsCons(const std::string& iden) {
 std::string Environment::GetTypeByCons(std::string cons_name) {
   __typeof(cons_to_type_table_.begin()) it = cons_to_type_table_.find(cons_name);
   if (it == cons_to_type_table_.end()) {
+    if (cons_name == "int" || cons_name == "double" || cons_name == "string" || cons_name == "function") {
+      return cons_name;
+    }
     // TODO
     fprintf(stderr, "can not find the type of constructor %s\n", cons_name.c_str());
   } else {

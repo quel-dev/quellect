@@ -93,15 +93,6 @@ class ConsDefNode : public Node {
   std::vector<Node*> type_list_;
 };
 
-class NewTypeExpNode : public Node {
- public:
-  NewTypeExpNode(const std::string& cons_iden, Node* exp_list);
-  Value Eval(Environment *env);
- protected:
-  const std::string cons_iden_;
-  std::vector<Node*> exp_list_;
-};
-
 class FuncDef : public Node {
  public:
   FuncDef(const std::string& func_iden, Node* parameters, Node* statements);
@@ -115,12 +106,9 @@ class FuncDef : public Node {
 class FuncExp : public Node {
  public:
   FuncExp(const std::string& func_iden, Node* parameters);
-  FuncExp(Node* func_literal, Node* parameters);
   Value Eval(Environment* env);
  protected:
-  bool anonymous;
   const std::string func_iden_;
-  Node* func_literal_;
   Node* parameters_;
 };
 

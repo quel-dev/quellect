@@ -100,12 +100,6 @@ ConsDefNode::ConsDefNode(const std::string& iden, Node* type_list):
   type_list->CopyList(&type_list_);
 }
 
-NewTypeExpNode::NewTypeExpNode(const std::string& cons_iden, Node* exp_list):
-    cons_iden_(cons_iden) {
-  node_type_ = "newtype-exp";
-  exp_list->CopyList(&exp_list_);
-}
-
 FuncDef::FuncDef(const std::string& func_iden, Node* parameters, Node* literal):
     func_iden_(func_iden), parameters_(parameters), literal_(literal) {
   node_type_ = "func_definition";
@@ -114,13 +108,6 @@ FuncDef::FuncDef(const std::string& func_iden, Node* parameters, Node* literal):
 FuncExp::FuncExp(const std::string& func_iden, Node* parameters):
     func_iden_(func_iden), parameters_(parameters){
   node_type_ = "func_expression";
-  anonymous = false;
-}
-
-FuncExp::FuncExp(Node* func_literal, Node* parameters):
-    func_literal_(func_literal), parameters_(parameters){
-  node_type_ = "func_expression";    
-  anonymous = true;
 }
 
 IfNode::IfNode(Node* condition, Node* if_branch, Node* else_branch):
@@ -189,24 +176,6 @@ Value StringToken::Eval(Environment* env) {
   }
 }
 
-Value FuncDef::Eval(Environment* env) {
-  Function func;
-  func.context = new Environment;
-  *(func.context) = *env;
-  func.literal = literal_;
-  func.param_list = parameters_;
-  Value value(func);
-  if (func_iden_ != ANONY_IDEN) {
-    env->set(func_iden_, value);
-  }
-  return value;
-}
-
-Value FuncExp::Eval(Environment* env) {
-  std::vector<Value> params = parameters_->EvalToList(env);
-  Function* func = SelectFunction(func_iden_, params);
-}
-
 Value TypeDefNode::Eval(Environment* env) {
   if (env->ContainsType(iden_)) {
     fprintf(stderr, "Redefined type %s\n", iden_.c_str());
@@ -233,28 +202,42 @@ Value ConsDefNode::Eval(Environment* env) {
   return Value(-1);
 }
 
-Value NewTypeExpNode::Eval(Environment* env) {
-  if (!env->ContainsCons(cons_iden_)) {
-     fprintf(stderr, "Undefined constructor %s\n", cons_iden_.c_str());
-     return Value(-1);
+Value FuncDef::Eval(Environment* env) {
+  Function func;
+  func.context = new Environment;
+  *(func.context) = *env;
+  func.literal = literal_;
+  func.param_list = parameters_;
+  Value value(func);
+  if (func_iden_ != ANONY_IDEN) {
+    env->set(func_iden_, value);
   }
-  
-  std::vector<std::string> cons_type = env->GetCons(cons_iden_);
+  return value;
+}
 
-  if (cons_type.size() != exp_list_.size()) {
-     fprintf(stderr, "Incorrect number of parameters for constructor %s\n", cons_iden_.c_str());
-     return Value(-1);
-  }
+Value FuncExp::Eval(Environment* env) {
+  std::vector<Value> params = parameters_->EvalToList(env);
 
-  Object now(cons_iden_);
-  for (size_t i = 0; i < exp_list_.size(); i++) {
-    Value sub_value = exp_list_[i]->Eval(env);
-    if (env->GetTypeByCons(sub_value.GetConsName()) != cons_type[i]) {
-      fprintf(stderr, "Unmatched parameters for constructor %s\n", cons_iden_.c_str());
+  // For a constructor
+  if (env->ContainsCons(func_iden_)) {
+    std::vector<std::string> cons_type = env->GetCons(func_iden_);
+
+    if (cons_type.size() != params.size()) {
+      fprintf(stderr, "Incorrect number of parameters for constructor %s\n", func_iden_.c_str());
       return Value(-1);
     }
-    now.Add(sub_value);
+
+    for (size_t i = 0; i < params.size(); i++) {
+      if (env->GetTypeByCons(params[i].GetConsName()) != cons_type[i]) {
+        fprintf(stderr, "Unmatched parameters for constructor %s\n", func_iden_.c_str());
+        return Value(-1);
+      }
+    }
+    Object now(func_iden_, params);
+    Value tmp(now);
+    return tmp;
+  } else {
+    Function* func = SelectFunction(func_iden_, params);
   }
-  return Value(now);
 }
 

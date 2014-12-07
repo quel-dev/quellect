@@ -74,7 +74,6 @@ void yyerror(Node* root, const char* msg) {
 %type<node> newtype-definition
 %type<node> type
 %type<node> type-comma-list
-%type<node> newtype-expression
 %type<node> declaration
 %type<node> parameter-pair-comma-list
 %type<node> expression
@@ -93,7 +92,7 @@ void yyerror(Node* root, const char* msg) {
 
 %%
 start
-  : compound-statement                                  { root = $1;}
+  : compound-statement                                  { root = $1; }
   ;
 
 assignment-expression 
@@ -206,9 +205,6 @@ primary-expression
   | INT_NUM                                                   { $$ = $1;}
   | DOUBLE_NUM                                                { $$ = $1;}
   | CONST_STR                                                 { $$ = $1;}
-  | newtype-expression                                        {
-                                                                $$ = $1;
-                                                              }
   | '(' constant-expression ')'                               {
                                                                 $$ = $2;
                                                               }
@@ -230,13 +226,13 @@ newtype-definition
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), $4);
                                                                 delete($1);
                                                               }
-  | TYPE IDEN '=' IDEN FUNC_BRAC type-comma-list '>'          {
+  | TYPE IDEN '=' IDEN FUNC_BRAC type-comma-list GT           {
                                                                 Node* cons = new ConsDefNode(($4)->GetStrTok(), $6);
                                                                 $$ = new TypeDefNode(($2)->GetStrTok(), cons);
                                                                 delete($1);  // token 'type'
                                                                 delete($5);  // token FUNC_BRAC
                                                               }
-  | newtype-definition '|' IDEN FUNC_BRAC type-comma-list '>' {
+  | newtype-definition '|' IDEN FUNC_BRAC type-comma-list GT  {
                                                                 $$ = $1;
                                                                 Node* cons = new ConsDefNode(($3)->GetStrTok(), $5);
                                                                 ($$)->Add(cons);
@@ -251,15 +247,9 @@ type
 
 type-comma-list
   : type                                                      { $$ = new ListNode("type_list", $1); }
-  | type ',' type-comma-list                                  {
-                                                                $$ = $3;
-                                                                ($$)->Add($1);
-                                                              }
-  ;
-
-newtype-expression
-  : FUNC_BRAC '<' expression-comma-list '>'                   {
-                                                                $$ = new NewTypeExpNode(($1)->GetStrTok(), $3);
+  | type-comma-list ',' type                                  {
+                                                                $$ = $1;
+                                                                ($$)->Add($3);
                                                               }
   ;
 
@@ -285,12 +275,16 @@ parameter-pair-comma-list
 r-type-definition
   : IDEN                                                                { }
 
-  | FUNC_BRAC r-type-definition-list '>'                                { }
+  | FUNC_BRAC r-type-definition-list  GT                                { }
+
+  ;
 
 r-type-definition-list
   : r-type-definition                                                   { }
 
   | r-type-definition ',' r-type-definition-list                        { }
+
+  ;
 
 expression
   : constant-expression                                                 { $$ = $1;}
@@ -298,9 +292,10 @@ expression
 
 expression-comma-list
   : expression                                                          { $$ = new ListNode("exp_list", $1);}
-  | expression ',' expression-comma-list                                {
-                                                                          $$ = $3;
-                                                                          ($$)->Add($1);
+
+  | expression-comma-list ',' expression                                {
+                                                                          $$ = $1;
+                                                                          ($$)->Add($3);
                                                                         }
   ;
 
