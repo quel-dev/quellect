@@ -2,35 +2,12 @@
 #include <map>
 #include <vector>
 
+#ifndef TYPE_H_
+#define TYPE_H_
 #include "type.h"
+#endif
 
-enum {
-  INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE
-};
-
-struct Value {
-  Value():value_type_(-1){}
-  Value(int data);
-  Value(double data);
-  Value(const std::string& data);
-  Value(const Value& value);
-  Value(const Function& f);
-  Value(const Object& f);
-  union {
-    int* int_;
-    double* double_;
-    std::string* string_;
-    Function* function_;
-    Object* object_;
-    // TODO
-    //Array* array_;
-    //NewType* newtype_;
-  };
-  int value_type_;
-  void display();
-  bool IsPrimaryType(void);
-  std::string GetConsName(void);
-};
+struct Value;
 
 class Environment {
  public:

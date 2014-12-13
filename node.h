@@ -8,6 +8,11 @@
 #include "environment.h"
 #endif
 
+#ifndef TYPE_H_
+#define TYPE_H_
+#include "type.h"
+#endif
+
 class Node {
  public:
   Node(){};
@@ -93,13 +98,38 @@ class ConsDefNode : public Node {
   std::vector<Node*> type_list_;
 };
 
+struct TypePattern {
+  std::string cons_name;
+  std::vector<TypePattern*> sub_types;
+
+  TypePattern(std::string cons_name):cons_name(cons_name){}
+  void Add(TypePattern* oth) {sub_types.push_back(oth);}
+  void SetConsName(std::string name) {cons_name = name;}
+  bool IsTerminal(void) const {return sub_types.empty();}
+
+  void Display(void) {
+    if (cons_name != "") {
+      printf("%s", cons_name.c_str());
+      if (this->IsTerminal()) return;
+      else printf("::<");
+    }
+    for (size_t i = 0; i < sub_types.size(); ++i) {
+      sub_types[i]->Display();
+      if (i != sub_types.size() - 1) printf(", ");
+    }
+    if (cons_name != "") {
+      printf(">");
+    } else printf("\n");
+  }
+};
+
 class FuncDef : public Node {
  public:
-  FuncDef(const std::string& func_iden, Node* parameters, Node* statements);
+  FuncDef(const std::string& func_iden, TypePattern* parameters, Node* statements);
   Value Eval(Environment* env);
  protected:
   const std::string func_iden_;
-  Node* parameters_;
+  TypePattern* parameters_;
   Node* literal_;
 };
 

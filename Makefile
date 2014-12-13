@@ -3,7 +3,7 @@ BISON_LINUX = bison -d
 LEX = lex
 CC = g++
 
-main: main.cpp node.o util.o environment.o lex.yy.o yyparse.tab.o
+main: main.cpp type.o node.o util.o environment.o lex.yy.o yyparse.tab.o
 	$(CC) -g -Wall -o $@ $^
 
 node.o: node.cpp node.h environment.h type.h util.h
@@ -13,6 +13,9 @@ util.o: util.cpp util.h environment.h type.h
 	$(CC) -g -c -Wall -o $@ $<
 
 environment.o: environment.cpp environment.h type.h
+	$(CC) -g -c -Wall -o $@ $<
+
+type.o: type.cpp type.h environment.h
 	$(CC) -g -c -Wall -o $@ $<
 
 lex.yy.o: lex.yy.c node.h environment.h type.h yyparse.tab.hpp

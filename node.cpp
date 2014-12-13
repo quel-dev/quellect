@@ -1,5 +1,12 @@
+#ifndef NODE_H_
+#define NODE_H_
 #include "node.h"
+#endif
+
+#ifndef UTIL_H_
+#define UTIL_H_
 #include "util.h"
+#endif
 
 #define ANONY_IDEN "/"
 
@@ -100,7 +107,7 @@ ConsDefNode::ConsDefNode(const std::string& iden, Node* type_list):
   type_list->CopyList(&type_list_);
 }
 
-FuncDef::FuncDef(const std::string& func_iden, Node* parameters, Node* literal):
+FuncDef::FuncDef(const std::string& func_iden, TypePattern* parameters, Node* literal):
     func_iden_(func_iden), parameters_(parameters), literal_(literal) {
   node_type_ = "func_definition";
 }
@@ -212,6 +219,7 @@ Value FuncDef::Eval(Environment* env) {
   if (func_iden_ != ANONY_IDEN) {
     env->set(func_iden_, value);
   }
+  parameters_->Display();
   return value;
 }
 
@@ -237,7 +245,6 @@ Value FuncExp::Eval(Environment* env) {
     Value tmp(now);
     return tmp;
   } else {
-    Function* func = SelectFunction(func_iden_, params);
   }
 }
 

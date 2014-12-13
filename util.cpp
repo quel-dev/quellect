@@ -1,5 +1,9 @@
+#ifndef UTIL_H_
+#define UTIL_H_
 #include "util.h"
+#endif
 
+struct TypePattern;
 Value CalcBinaryOp(const std::string& op_type,
                    Value operand1, Value operand2) {
   if (operand1.value_type_ == operand2.value_type_) {
@@ -34,11 +38,24 @@ Value CalcBinaryOp(const std::string& op_type,
   }
 }
 
-bool CheckParamsMatched(Function* func, const std::vector<Value> values, Environment* env = NULL) {
+/*
+bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const std::vector<Value>& values) {
+  if (pattern_list.size() != values.size()) {
+    return false;
+  }
+  for (size_t i = 0; i < values.size(); ++i) {
+    if (!IsParamMatched(pattern_list[i], values[i])) return false;
+  }
   return true;
 }
 
-Function* SelectFunction(const std::string& func_iden, const std::vector<Value>& values) {
-  return NULL;
+bool IsParamMatched(const TypePattern *pattern, Value value) {
+  if (value.IsPrimaryType()) {
+    return pattern->IsTerminal();
+  }
+  if (value.GetConsName() != pattern->cons_name) {
+    return false;
+  }
+  return IsParamListMatched(pattern->sub_types, value.GetValues());
 }
-
+*/

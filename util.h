@@ -6,9 +6,21 @@
 #include "environment.h"
 #endif
 
+#ifndef TYPE_H_
+#define TYPE_H_
+#include "type.h"
+#endif
+
+#ifndef NODE_H_
+#define NODE_H_
+#include "node.h"
+#endif
+
 Value CalcBinaryOp(const std::string& op_type,
                    Value operand1, Value operand2); 
 
-bool CheckParamsMatched(Function* func, const std::vector<Value>& values, Environment* env = NULL);
+/*
+bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const std::vector<Value>& values);
 
-Function* SelectFunction(const std::string& func_iden, const std::vector<Value>& values);
+bool IsParamMatched(const TypePattern* pattern, Value value);
+*/
