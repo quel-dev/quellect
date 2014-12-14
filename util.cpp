@@ -38,7 +38,6 @@ Value CalcBinaryOp(const std::string& op_type,
   }
 }
 
-/*
 bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const std::vector<Value>& values) {
   if (pattern_list.size() != values.size()) {
     return false;
@@ -58,4 +57,24 @@ bool IsParamMatched(const TypePattern *pattern, Value value) {
   }
   return IsParamListMatched(pattern->sub_types, value.GetValues());
 }
-*/
+
+void BindParams(const std::vector<TypePattern*>& pattern, const std::vector<Value>& params, Environment* env) {
+  if (pattern.size() != params.size()) {
+    // TODO
+    fprintf(stderr, "unmatched parameters\n");
+    return;
+  }
+  for (size_t i = 0; i < pattern.size(); ++i) {
+    if (pattern[i]->IsTerminal()) {
+      env->set(pattern[i]->GetConsName(), params[i]);
+    } else {
+      if (!params[i].IsPrimaryType() && params[i].GetConsName() == pattern[i]->GetConsName()) {
+        BindParams(pattern[i]->sub_types, params[i].object_->values, env);
+      } else {
+        // TODO
+        fprintf(stderr, "unmatched parameters\n");
+      }
+    }
+  }
+}
+

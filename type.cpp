@@ -3,6 +3,11 @@
 #include "type.h"
 #endif
 
+#ifndef UTIL_H_
+#define UTIL_H_
+#include "util.h"
+#endif
+
 Value::Value(int data):value_type_(INT_TYPE) {
   int_ = new int;
   *int_ = data;
@@ -50,7 +55,7 @@ Value::Value(const Value& v) {
   }
 }
 
-void Value::display() {
+void Value::display() const {
   switch (value_type_) {
     case INT_TYPE:
       printf("%d", *int_);
@@ -81,11 +86,11 @@ void Value::display() {
   }
 }
 
-bool Value::IsPrimaryType(void) {
+bool Value::IsPrimaryType(void) const {
   return value_type_ != OBJECT_TYPE;
 }
 
-std::string Value::GetConsName(void) {
+std::string Value::GetConsName(void) const {
   if (IsPrimaryType()) {
     switch (value_type_) {
       case INT_TYPE:
@@ -102,6 +107,7 @@ std::string Value::GetConsName(void) {
   }
 }
 
-const std::vector<Value>& Value::GetValues(void) {
+const std::vector<Value>& Value::GetValues(void) const {
   return object_->values;
 }
+

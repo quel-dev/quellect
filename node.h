@@ -107,6 +107,8 @@ struct TypePattern {
   void SetConsName(std::string name) {cons_name = name;}
   bool IsTerminal(void) const {return sub_types.empty();}
 
+  const std::string& GetConsName(void) {return cons_name;}
+
   void Display(void) {
     if (cons_name != "") {
       printf("%s", cons_name.c_str());

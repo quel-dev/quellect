@@ -8,3 +8,5 @@ tmp2 = (cons_two tmp, (cons 3, 4));
 function add(cons_two::<a, cons::<x, t> >, cons::<n, m>) {
   c = x + y;
 }
+
+(add tmp2, tmp);

@@ -32,10 +32,16 @@ struct Value {
     //NewType* newtype_;
   };
   int value_type_;
-  void display();
-  bool IsPrimaryType(void);
-  std::string GetConsName(void);
-  const std::vector<Value>& GetValues(void);
+
+  void display() const;
+
+  bool IsPrimaryType(void) const;
+  bool IsFunction(void) const {
+    return value_type_ == FUNCTION_TYPE;
+  }
+
+  std::string GetConsName(void) const ;
+  const std::vector<Value>& GetValues(void) const;
 };
 
 struct Function {
@@ -43,7 +49,6 @@ struct Function {
   Node* literal;
   Environment* context;
 
-  public:
   Function(TypePattern* param_list, Node* literal, Environment* context):param_list(param_list), literal(literal), context(context){};
   Function(){}
 };

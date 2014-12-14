@@ -26,10 +26,18 @@ class Environment {
   void SetConsOfType(std::string cons_name, std::string type_name);
   std::string GetTypeByCons(std::string);
 
+  void SetFunction(const std::string& iden, const Value& value);
+  Value SelectFunction(const std::string& iden, const std::vector<Value>& values); 
+
+  Environment(Environment* env = NULL):father(env){}
+
  protected:
   std::map<std::string, Value> variable_table_;
   std::map<std::string, std::vector<std::string> > type_table_;
   std::map<std::string, std::vector<std::string> > cons_table_;
   std::map<std::string, std::string> cons_to_type_table_;
+  std::map<std::string, std::vector<Value> > functions_table_;
+
+  Environment *father;
 };
 

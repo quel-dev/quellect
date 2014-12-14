@@ -217,7 +217,7 @@ Value FuncDef::Eval(Environment* env) {
   func.param_list = parameters_;
   Value value(func);
   if (func_iden_ != ANONY_IDEN) {
-    env->set(func_iden_, value);
+    env->SetFunction(func_iden_, value);
   }
   parameters_->Display();
   return value;
@@ -245,6 +245,10 @@ Value FuncExp::Eval(Environment* env) {
     Value tmp(now);
     return tmp;
   } else {
+    Value f = env->SelectFunction(func_iden_, params);
+    Environment* new_env = new Environment(f.function_->context);
+    BindParams(f.function_->param_list->sub_types, params, new_env);
+    return f.function_->literal->Eval(new_env);
   }
 }
 

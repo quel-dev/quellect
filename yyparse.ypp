@@ -310,6 +310,7 @@ statement
 
 compound-statement
   : /* empty */                                                         { $$ = new ListNode("statement_list");}
+
   | compound-statement statement                                        {
                                                                           $$ = $1;
                                                                           ($$)->Add($2); 
