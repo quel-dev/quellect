@@ -1,12 +1,12 @@
-type vector = cons::<int, int>;
-type two_vector = cons_two::<vector, vector>;
-
-tmp = (cons 1, 2);
-
-tmp2 = (cons_two tmp, (cons 3, 4));
-
-function add(cons_two::<a, cons::<x, t> >, cons::<n, m>) {
-  c = x + y;
+function cons_add(x) {
+  function add(y) {
+    c = x + y;
+  }
+  add;
 }
 
-(add tmp2, tmp);
+f = (cons_add 2);
+g = (cons_add 3);
+tmp1 = (f 10);
+tmp2 = (g 10);
+tmp2;

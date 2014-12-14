@@ -47,9 +47,9 @@ Value ListNode::Eval(Environment* env) {
   }
 }
 
-std::vector<Value> ListNode::EvalToList(Environment* env) {
+ValuePtrList ListNode::EvalToList(Environment* env) {
   if (node_type_ == "statement_list" || node_type_ == "exp_list") {
-    std::vector<Value> ret;
+    ValuePtrList ret;
     for (int i = 0 ; i < nodes_.size() ; ++i) {
       ret.push_back(nodes_[i]->Eval(env));
     }
@@ -211,6 +211,10 @@ Value ConsDefNode::Eval(Environment* env) {
 
 Value FuncDef::Eval(Environment* env) {
   Function func;
+#ifdef DEBUG
+  printf("@%s\n", func_iden_.c_str());
+  env->Display();
+#endif
   func.context = new Environment;
   *(func.context) = *env;
   func.literal = literal_;
@@ -219,12 +223,11 @@ Value FuncDef::Eval(Environment* env) {
   if (func_iden_ != ANONY_IDEN) {
     env->SetFunction(func_iden_, value);
   }
-  parameters_->Display();
   return value;
 }
 
 Value FuncExp::Eval(Environment* env) {
-  std::vector<Value> params = parameters_->EvalToList(env);
+  ValuePtrList params = parameters_->EvalToList(env);
 
   // For a constructor
   if (env->ContainsCons(func_iden_)) {
@@ -236,7 +239,7 @@ Value FuncExp::Eval(Environment* env) {
     }
 
     for (size_t i = 0; i < params.size(); i++) {
-      if (env->GetTypeByCons(params[i].GetConsName()) != cons_type[i]) {
+      if (env->GetTypeByCons(params[i]->GetConsName()) != cons_type[i]) {
         fprintf(stderr, "Unmatched parameters for constructor %s\n", func_iden_.c_str());
         return Value(-1);
       }
@@ -245,10 +248,18 @@ Value FuncExp::Eval(Environment* env) {
     Value tmp(now);
     return tmp;
   } else {
-    Value f = env->SelectFunction(func_iden_, params);
-    Environment* new_env = new Environment(f.function_->context);
-    BindParams(f.function_->param_list->sub_types, params, new_env);
-    return f.function_->literal->Eval(new_env);
+    Value *f = env->SelectFunction(func_iden_, params);
+#ifdef DEBUG
+    printf("@eval %s\n", func_iden_.c_str());
+    f->function_->context->Display();
+#endif
+    Environment* new_env = new Environment(f->function_->context);
+    BindParams(f->function_->param_list->sub_types, params, new_env);
+#ifdef DEBUG
+    printf("@new_env %s\n", func_iden_.c_str());
+    new_env->Display();
+#endif
+    return f->function_->literal->Eval(new_env);
   }
 }
 

@@ -48,14 +48,41 @@ Value::Value(const Value& v) {
     break;
     case FUNCTION_TYPE:
       function_ = new Function;
-      *function_ = *v.function_;
+      *function_ = *(v.function_);
+    break;
     case OBJECT_TYPE:
       object_ = new Object;
-      *object_ = *v.object_;
+      *object_ = *(v.object_);
+    break;
   }
 }
 
-void Value::display() const {
+Value& Value::operator =(const Value& v) {
+  value_type_ = v.value_type_;
+  switch (v.value_type_) {
+    case INT_TYPE:
+      int_ = new int;
+      *int_ = *v.int_;
+    break;
+    case DOUBLE_TYPE:
+      double_ = new double;
+      *double_ = *v.double_;
+    break;
+    case STRING_TYPE:
+      string_ = new std::string(*v.string_);
+    break;
+    case FUNCTION_TYPE:
+      function_ = new Function;
+      *function_ = *(v.function_);
+    break;
+    case OBJECT_TYPE:
+      object_ = new Object;
+      *object_ = *(v.object_);
+    break;
+  }
+}
+
+void Value::Display() const {
   switch (value_type_) {
     case INT_TYPE:
       printf("%d", *int_);
@@ -67,7 +94,8 @@ void Value::display() const {
       printf("%s", string_->c_str());
     break;
     case FUNCTION_TYPE:
-      printf("[Function]");
+      printf("[Function], parameters: ");
+      function_->param_list->Display();
     break;
     case OBJECT_TYPE:
       if (object_->values.empty()) {
@@ -75,7 +103,7 @@ void Value::display() const {
       } else {
         printf("%s::<", object_->cons_name.c_str());
         for (size_t i = 0; i < object_->values.size(); i++) {
-          object_->values[i].display();
+          object_->values[i]->Display();
           if (i != object_->values.size() - 1) {
             printf(",");
           }
@@ -107,7 +135,14 @@ std::string Value::GetConsName(void) const {
   }
 }
 
-const std::vector<Value>& Value::GetValues(void) const {
+const ValuePtrList& Value::GetValues(void) const {
   return object_->values;
+}
+
+Function::Function(const Function& oth) {
+  param_list = new TypePattern(*(oth.param_list));
+  literal = new Node;
+  *literal = *(oth.literal);
+  context = new Environment(oth.context);
 }
 

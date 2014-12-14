@@ -267,9 +267,9 @@ parameter-pair-comma-list
   : r-type-definition                                                   {
                                                                           $$ = new TypePattern(""); ($$)->Add($1);
                                                                         }
-  | r-type-definition ',' parameter-pair-comma-list                     {
-                                                                          $$ = $3;
-                                                                          ($$)->Add($1);
+  | parameter-pair-comma-list ',' r-type-definition                     {
+                                                                          $$ = $1;
+                                                                          ($$)->Add($3);
                                                                         }
   ;
 

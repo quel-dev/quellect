@@ -19,8 +19,8 @@
 Value CalcBinaryOp(const std::string& op_type,
                    Value operand1, Value operand2); 
 
-bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const std::vector<Value>& values);
+bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrList& values);
 
-bool IsParamMatched(const TypePattern* pattern, Value value);
+bool IsParamMatched(const TypePattern* pattern, const Value* value);
 
-void BindParams(const std::vector<TypePattern*>& pattern, const std::vector<Value>& params, Environment* env);
+void BindParams(const std::vector<TypePattern*>& pattern, const ValuePtrList& params, Environment* env);

@@ -8,6 +8,7 @@
 #endif
 
 struct Value;
+class ValuePtrList;
 
 class Environment {
  public:
@@ -27,16 +28,18 @@ class Environment {
   std::string GetTypeByCons(std::string);
 
   void SetFunction(const std::string& iden, const Value& value);
-  Value SelectFunction(const std::string& iden, const std::vector<Value>& values); 
+  Value* SelectFunction(const std::string& iden, const ValuePtrList& values); 
 
   Environment(Environment* env = NULL):father(env){}
+
+  void Display(void);
 
  protected:
   std::map<std::string, Value> variable_table_;
   std::map<std::string, std::vector<std::string> > type_table_;
   std::map<std::string, std::vector<std::string> > cons_table_;
   std::map<std::string, std::string> cons_to_type_table_;
-  std::map<std::string, std::vector<Value> > functions_table_;
+  std::map<std::string, ValuePtrList > functions_table_;
 
   Environment *father;
 };

@@ -38,27 +38,43 @@ Value CalcBinaryOp(const std::string& op_type,
   }
 }
 
-bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const std::vector<Value>& values) {
+bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrList& values) {
   if (pattern_list.size() != values.size()) {
     return false;
   }
+
+#ifdef DEBUG
+  printf("@matching...\n");
+#endif
+
   for (size_t i = 0; i < values.size(); ++i) {
+
+#ifdef DEBUG
+    printf("-");
+    pattern_list[i]->Display(); puts("");
+    printf("+");
+    values[i]->Display(); puts("");
+#endif
+
     if (!IsParamMatched(pattern_list[i], values[i])) return false;
   }
   return true;
 }
 
-bool IsParamMatched(const TypePattern *pattern, Value value) {
-  if (value.IsPrimaryType()) {
-    return pattern->IsTerminal();
-  }
-  if (value.GetConsName() != pattern->cons_name) {
+bool IsParamMatched(const TypePattern *pattern, const Value* value) {
+  // The terminal pattern can match anything
+  if (pattern->IsTerminal()) return true;
+
+  // The pattern must not be a terminal so the value shouldn't be atomic
+  if (value->IsPrimaryType()) return false;
+
+  if (value->GetConsName() != pattern->cons_name) {
     return false;
   }
-  return IsParamListMatched(pattern->sub_types, value.GetValues());
+  return IsParamListMatched(pattern->sub_types, value->GetValues());
 }
 
-void BindParams(const std::vector<TypePattern*>& pattern, const std::vector<Value>& params, Environment* env) {
+void BindParams(const std::vector<TypePattern*>& pattern, const ValuePtrList& params, Environment* env) {
   if (pattern.size() != params.size()) {
     // TODO
     fprintf(stderr, "unmatched parameters\n");
@@ -66,10 +82,10 @@ void BindParams(const std::vector<TypePattern*>& pattern, const std::vector<Valu
   }
   for (size_t i = 0; i < pattern.size(); ++i) {
     if (pattern[i]->IsTerminal()) {
-      env->set(pattern[i]->GetConsName(), params[i]);
+      env->set(pattern[i]->GetConsName(), *params[i]);
     } else {
-      if (!params[i].IsPrimaryType() && params[i].GetConsName() == pattern[i]->GetConsName()) {
-        BindParams(pattern[i]->sub_types, params[i].object_->values, env);
+      if (!params[i]->IsPrimaryType() && params[i]->GetConsName() == pattern[i]->GetConsName()) {
+        BindParams(pattern[i]->sub_types, params[i]->object_->values, env);
       } else {
         // TODO
         fprintf(stderr, "unmatched parameters\n");

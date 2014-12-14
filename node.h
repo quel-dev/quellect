@@ -24,7 +24,7 @@ class Node {
   virtual const std::string& GetStrTok(){}
   virtual void AddBranch(Node* condition, Node* action){}
   virtual Value Eval(Environment* environment){puts(node_type_.c_str());};
-  virtual std::vector<Value> EvalToList(Environment*){};
+  virtual ValuePtrList EvalToList(Environment*){};
  protected:
   std::string node_type_;
 };
@@ -37,7 +37,7 @@ class ListNode : public Node {
   // copy nodes_ to nodes
   void CopyList(std::vector<Node*>* nodes);
   Value Eval(Environment* env);
-  std::vector<Value> EvalToList(Environment* env);
+  ValuePtrList EvalToList(Environment* env);
  protected:
   std::vector<Node*> nodes_;
 };
@@ -102,10 +102,30 @@ struct TypePattern {
   std::string cons_name;
   std::vector<TypePattern*> sub_types;
 
+  TypePattern() {}
   TypePattern(std::string cons_name):cons_name(cons_name){}
-  void Add(TypePattern* oth) {sub_types.push_back(oth);}
-  void SetConsName(std::string name) {cons_name = name;}
-  bool IsTerminal(void) const {return sub_types.empty();}
+
+  TypePattern(const TypePattern& oth) {
+    cons_name = oth.cons_name;
+    for (size_t i = 0; i < oth.sub_types.size(); ++i) {
+      TypePattern *ptr = new TypePattern;
+      *ptr = *(sub_types[i]);
+      sub_types.push_back(ptr);
+    }
+  }
+
+  TypePattern& operator =(const TypePattern& oth) {
+    cons_name = oth.cons_name;
+    for (size_t i = 0; i < oth.sub_types.size(); ++i) {
+      TypePattern *ptr = new TypePattern;
+      *ptr = *(sub_types[i]);
+      sub_types.push_back(ptr);
+    }
+  }
+
+  void Add(TypePattern* oth) { sub_types.push_back(oth); }
+  void SetConsName(std::string name) { cons_name = name; }
+  bool IsTerminal(void) const { return sub_types.empty(); }
 
   const std::string& GetConsName(void) {return cons_name;}
 
