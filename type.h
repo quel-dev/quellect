@@ -38,16 +38,27 @@ struct Value {
 
   int value_type_;
 
-  void Display() const;
+  int GetType(void) const {return value_type_;}
 
+  int GetInt(void) const { return *int_; }
+  double GetDouble(void) const { return *double_; }
+  const std::string& GetString(void) const { return *string_; }
+  const Function& GetFunction(void) const { return *function_; }
+  const Object& GetObject(void) const { return *object_; }
+
+  bool IsInt(void) const { return value_type_ == INT_TYPE; }
+  bool IsDouble(void) const { return value_type_ == DOUBLE_TYPE; }
+  bool IsString(void) const { return value_type_ == STRING_TYPE; }
+  bool IsObject(void) const { return value_type_ == OBJECT_TYPE; }
+  bool IsFunction(void) const { return value_type_ == FUNCTION_TYPE; }
+
+  bool IsNumType(void) const { return IsInt() || IsDouble(); }
   bool IsPrimaryType(void) const;
-  bool IsFunction(void) const {
-    return value_type_ == FUNCTION_TYPE;
-  }
 
   std::string GetConsName(void) const ;
   const ValuePtrList& GetValues(void) const;
 
+  void Display() const;
 };
 
 class ValuePtrList {

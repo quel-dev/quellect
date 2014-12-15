@@ -3,6 +3,10 @@
 #include "util.h"
 #endif
 
+bool compatibleForArith(const Value& op1, const Value& op2) {
+  return op1.IsNumType() && op2.IsNumType();
+}
+
 struct TypePattern;
 Value CalcBinaryOp(const std::string& op_type,
                    Value operand1, Value operand2) {
@@ -92,5 +96,17 @@ void BindParams(const std::vector<TypePattern*>& pattern, const ValuePtrList& pa
       }
     }
   }
+}
+
+bool IsTrue(const Value& value) {
+  switch(value.GetType()) {
+    case INT_TYPE:
+      return value.GetInt() != 0;
+    case DOUBLE_TYPE:
+      return value.GetDouble() != 0;
+    case STRING_TYPE:
+      return value.GetString() != "";
+  }
+  return true;
 }
 

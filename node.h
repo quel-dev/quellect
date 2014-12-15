@@ -167,6 +167,7 @@ class FuncExp : public Node {
 class IfNode : public Node {
  public:
   IfNode(Node* condition, Node* if_branch, Node* else_branch);
+  Value Eval(Environment *env); 
  protected:
   Node* condition_;
   Node* if_branch_;

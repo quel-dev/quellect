@@ -16,6 +16,8 @@
 #include "node.h"
 #endif
 
+bool compatibleForArith(const Value&, const Value&);
+
 Value CalcBinaryOp(const std::string& op_type,
                    Value operand1, Value operand2); 
 
@@ -24,3 +26,5 @@ bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrLi
 bool IsParamMatched(const TypePattern* pattern, const Value* value);
 
 void BindParams(const std::vector<TypePattern*>& pattern, const ValuePtrList& params, Environment* env);
+
+bool IsTrue(const Value&);

@@ -58,6 +58,15 @@ ValuePtrList ListNode::EvalToList(Environment* env) {
   }
 }
 
+Value IfNode::Eval(Environment *env) {
+  Value cond = condition_->Eval(env);
+  if (IsTrue(cond)) {
+    return if_branch_->Eval(env);
+  } else {
+    return else_branch_->Eval(env);
+  }
+}
+
 BinaryOpExpNode::BinaryOpExpNode(
     Node* operand1, Node* operand2, const std::string& type) {
   operand1_ = operand1;
@@ -243,7 +252,16 @@ Value FuncExp::Eval(Environment* env) {
       return Value(-1);
     }
 
+#ifdef DEBUG
+    printf("@construction...\n");
+#endif
+
     for (size_t i = 0; i < params.size(); i++) {
+#ifdef DEBUG
+      printf("@%lu\n", i);
+      printf("    cons: %s\n",cons_type[i].c_str());
+      printf("    param: "); params[i]->Display(); puts("");
+#endif
       if (env->GetTypeByCons(params[i]->GetConsName()) != cons_type[i]) {
         fprintf(stderr, "Unmatched parameters for constructor %s\n", func_iden_.c_str());
         return Value(-1);

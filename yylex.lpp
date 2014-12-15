@@ -37,7 +37,6 @@ inline short MakeToken();
 "int"       { Return(INT);}
 "double"    { Return(DOUBLE);}
 "string"    { Return(STRING);}
-"null"      { Return(NUL);}
 "function"  { Return(FUNC);}
 "::<"       { Return(FUNC_BRAC);}
 "if"        { Return(IF);}
