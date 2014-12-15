@@ -42,6 +42,7 @@ Value ListNode::Eval(Environment* env) {
     Value val;
     for (int i = 0 ; i < nodes_.size() ; ++i) {
       val = nodes_[i]->Eval(env);
+      if (nodes_[i]->GetType() == "return") break;
     }
     return val;
   }
@@ -181,6 +182,10 @@ Value StringToken::Eval(Environment* env) {
   } else {
     //fprintf(stderr, "undefined variable: %s\n", value_.c_str());
   }
+}
+
+Value JumpNode::Eval(Environment* env) {
+  return value_->Eval(env);
 }
 
 Value TypeDefNode::Eval(Environment* env) {

@@ -192,6 +192,7 @@ class SwitchBranch : public Node {
 class JumpNode : public Node {
  public:
   JumpNode(const std::string& type, Node* value);
+  Value Eval(Environment*);
  protected:
   Node* value_;
 };
