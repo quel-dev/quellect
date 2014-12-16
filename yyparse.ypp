@@ -30,6 +30,7 @@ void yyerror(Node* root, const char* msg) {
 %start start
 
 %token<token> EQ
+%token<token> NE
 %token<token> LT
 %token<token> GT
 %token<token> LE
@@ -65,9 +66,8 @@ void yyerror(Node* root, const char* msg) {
 %type<node> constant-expression
 %type<node> logical-or-expression
 %type<node> logical-and-expression
-%type<node> equal-expression
-%type<node> notequal-expression
-%type<node> notequal-operator
+%type<node> equality-expression
+%type<node> relational-expression
 %type<node> additive-expression
 %type<node> multiplicative-expression
 %type<node> unary-expression
@@ -90,7 +90,7 @@ void yyerror(Node* root, const char* msg) {
 %type<node> print-statement
 %type<node> println-statement
 %type<node> function-expression
-%type<r_type_node> parameter-pair-comma-list
+%type<r_type_node> parameter-comma-list
 %type<r_type_node> r-type-definition
 %type<r_type_node> r-type-definition-list
 
@@ -124,42 +124,51 @@ logical-or-expression
   ;
 
 logical-and-expression
-  : equal-expression                                    {
+  : equality-expression                                    {
                                                           $$ = $1;
                                                         }
-  | logical-and-expression LOGAND equal-expression      {
+  | logical-and-expression LOGAND equality-expression      {
                                                           $$ = new BinaryOpExpNode($1, $3, "&&");
                                                           delete($2);
                                                         }
   ;
 
-equal-expression
-  : notequal-expression                                 {
+equality-expression
+  : relational-expression                               {
                                                           $$ = $1;
                                                         }
-  | equal-expression EQ notequal-expression             {
+  | equality-expression EQ relational-expression        {
                                                           $$ = new BinaryOpExpNode($1, $3, "==");
+                                                          delete($2);
+                                                        }
+  | equality-expression NE relational-expression        {
+                                                          $$ = new BinaryOpExpNode($1, $3, "!=");
                                                           delete($2);
                                                         }
   ;
 
-notequal-expression
+relational-expression
   : additive-expression                                 {
                                                           $$ = $1;
                                                         }
-  | additive-expression notequal-operator additive-expression  {
-                                                                 $$ = new BinaryOpExpNode($1, $3, "!=");
-                                                                 delete($2);
-                                                               }
+  | additive-expression LT additive-expression          {
+                                                          $$ = new BinaryOpExpNode($1, $3, "<");
+                                                          delete($2);
+                                                        }
+  | additive-expression GT additive-expression          {
+                                                          $$ = new BinaryOpExpNode($1, $3, ">");
+                                                          delete($2);
+                                                        }
+  | additive-expression LE additive-expression          {
+                                                          $$ = new BinaryOpExpNode($1, $3, "<=");
+                                                          delete($2);
+                                                        }
+  | additive-expression GE additive-expression          {
+                                                          $$ = new BinaryOpExpNode($1, $3, ">=");
+                                                          delete($2);
+                                                        }
   ;
                        
-notequal-operator
-  : LT                                                         { $$ = $1;}
-  | GT                                                         { $$ = $1;}
-  | LE                                                         { $$ = $1;}
-  | GE                                                         { $$ = $1;}
-  ;
-
 additive-expression
   : multiplicative-expression                                 {
                                                                 $$ = $1;
@@ -262,16 +271,16 @@ declaration
   : newtype-definition ';'                                                  {
                                                                               $$ = $1;
                                                                             }
-  | FUNC IDEN '(' parameter-pair-comma-list ')' '{' compound-statement '}'  {
+  | FUNC IDEN '(' parameter-comma-list ')' '{' compound-statement '}'       {
                                                                               $$ = new FuncDef(($2)->GetStrTok(), $4, $7);
                                                                             }
   ;
 
-parameter-pair-comma-list
+parameter-comma-list
   : r-type-definition                                                   {
                                                                           $$ = new TypePattern(""); ($$)->Add($1);
                                                                         }
-  | parameter-pair-comma-list ',' r-type-definition                     {
+  | parameter-comma-list ',' r-type-definition                          {
                                                                           $$ = $1;
                                                                           ($$)->Add($3);
                                                                         }
@@ -280,7 +289,7 @@ parameter-pair-comma-list
 r-type-definition
   : IDEN                                                                { $$ = new TypePattern(($1)->GetStrTok()); }
 
-  | IDEN FUNC_BRAC r-type-definition-list  GT                                { ($$) = ($3); ($$)->SetConsName(($1)->GetStrTok()); }
+  | IDEN FUNC_BRAC r-type-definition-list  GT                           { ($$) = ($3); ($$)->SetConsName(($1)->GetStrTok()); }
 
   ;
 
@@ -311,7 +320,7 @@ statement
   | event-statement                                                     { $$ = $1;}
   | jump-statement        ';'                                           { $$ = $1;}
   | print-statement       ';'                                           { $$ = $1;}
-  | println-statement       ';'                                           { $$ = $1;}
+  | println-statement       ';'                                         { $$ = $1;}
   ;
 
 print-statement

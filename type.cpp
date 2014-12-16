@@ -8,6 +8,11 @@
 #include "util.h"
 #endif
 
+Value::Value(bool data):value_type_(BOOL_TYPE) {
+  bool_ = new bool;
+  *bool_ = data;
+}
+
 Value::Value(int data):value_type_(INT_TYPE) {
   int_ = new int;
   *int_ = data;
@@ -35,6 +40,10 @@ Value::Value(const Object& o):value_type_(OBJECT_TYPE) {
 Value::Value(const Value& v) {
   value_type_ = v.value_type_;
   switch (v.value_type_) {
+    case BOOL_TYPE:
+      bool_ = new bool;
+      *bool_ = *v.bool_;
+    break;
     case INT_TYPE:
       int_ = new int;
       *int_ = *v.int_;
@@ -60,6 +69,10 @@ Value::Value(const Value& v) {
 Value& Value::operator =(const Value& v) {
   value_type_ = v.value_type_;
   switch (v.value_type_) {
+    case BOOL_TYPE:
+      bool_ = new bool;
+      *bool_ = *v.bool_;
+    break;
     case INT_TYPE:
       int_ = new int;
       *int_ = *v.int_;
@@ -80,10 +93,18 @@ Value& Value::operator =(const Value& v) {
       *object_ = *(v.object_);
     break;
   }
+  return *this;
 }
 
 void Value::Display() const {
   switch (value_type_) {
+    case BOOL_TYPE:
+      if (*bool_) {
+        printf("%s", "true");
+      } else {
+        printf("%s", "false");
+      }
+    break;
     case INT_TYPE:
       printf("%d", *int_);
     break;
@@ -121,6 +142,8 @@ bool Value::IsPrimaryType(void) const {
 std::string Value::GetConsName(void) const {
   if (IsPrimaryType()) {
     switch (value_type_) {
+      case BOOL_TYPE:
+        return "bool";
       case INT_TYPE:
         return "int";
       case DOUBLE_TYPE:

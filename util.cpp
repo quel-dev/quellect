@@ -3,11 +3,19 @@
 #include "util.h"
 #endif
 
+#include <cstdlib>
+
 bool compatibleForArith(const Value& op1, const Value& op2) {
   return op1.IsNumType() && op2.IsNumType();
 }
 
 struct TypePattern;
+
+void format_print(const char* operation_type, const char* operand_consname) {
+  fprintf(stderr, "can not apply %s operation to %s variables\n",
+      operation_type, operand_consname);
+}
+
 Value CalcBinaryOp(const std::string& op_type,
                    Value operand1, Value operand2) {
   if (operand1.value_type_ == operand2.value_type_) {
@@ -22,8 +30,12 @@ Value CalcBinaryOp(const std::string& op_type,
         case STRING_TYPE:
           return Value(*operand1.string_ + *operand2.string_);
         break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
       } 
-    }
+   }
    else if (op_type == "-") {
       switch(value_type_) {
         case INT_TYPE:
@@ -32,13 +44,182 @@ Value CalcBinaryOp(const std::string& op_type,
         case DOUBLE_TYPE:
           return Value(*operand1.double_ - *operand2.double_);
         break;
-        case STRING_TYPE:
-          return Value(*operand1.string_ + *operand2.string_);
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
         break;
       } 
+    } else if (op_type == "*") {
+      switch(value_type_) {
+        case INT_TYPE:
+          return Value(*operand1.int_ * *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ * *operand2.double_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "/") {
+      switch(value_type_) {
+        case INT_TYPE:
+          if (*operand2.int_ == 0) {
+            fprintf(stderr, "divide by 0.\n"); 
+            exit(-1);
+          }
+          return Value(*operand1.int_ / *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ / *operand2.double_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "%") {
+      switch(value_type_) {
+        case INT_TYPE:
+          if (*operand2.int_ == 0) {
+            fprintf(stderr, "divide by 0.\n"); 
+            exit(-1);
+          }
+          return Value(*operand1.int_ % *operand2.int_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "<") {
+      switch(value_type_) {
+        case INT_TYPE:
+          return Value(*operand1.int_ < *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ < *operand2.double_);
+        break;
+        case STRING_TYPE:
+          return Value(*operand1.string_ < *operand2.string_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "<=") {
+      switch(value_type_) {
+        case INT_TYPE:
+          return Value(*operand1.int_ <= *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ <= *operand2.double_);
+        break;
+        case STRING_TYPE:
+          return Value(*operand1.string_ <= *operand2.string_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == ">") {
+      switch(value_type_) {
+        case INT_TYPE:
+          return Value(*operand1.int_ > *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ > *operand2.double_);
+        break;
+        case STRING_TYPE:
+          return Value(*operand1.string_ > *operand2.string_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == ">=") {
+      switch(value_type_) {
+        case INT_TYPE:
+          return Value(*operand1.int_ >= *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ >= *operand2.double_);
+        break;
+        case STRING_TYPE:
+          return Value(*operand1.string_ >= *operand2.string_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "==") {
+      switch(value_type_) {
+        case BOOL_TYPE:
+          return Value(*operand1.bool_ == *operand2.bool_);
+        break;
+        case INT_TYPE:
+          return Value(*operand1.int_ == *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ == *operand2.double_);
+        break;
+        case STRING_TYPE:
+          return Value(*operand1.string_ == *operand2.string_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "!=") {
+      switch(value_type_) {
+        case INT_TYPE:
+          return Value(*operand1.int_ != *operand2.int_);
+        break;
+        case DOUBLE_TYPE:
+          return Value(*operand1.double_ != *operand2.double_);
+        case STRING_TYPE:
+          return Value(*operand1.string_ != *operand2.string_);
+        break;
+        default:
+          format_print(op_type.c_str(), operand1.GetConsName().c_str());
+          exit(-1);
+        break;
+      }
+    } else if (op_type == "&&") {
+      switch(value_type_) {
+        case BOOL_TYPE:
+            return Value(*operand1.bool_ && *operand2.bool_);
+        break;
+        default:
+            format_print(op_type.c_str(), operand1.GetConsName().c_str());
+            exit(-1);
+        break;
+      }
+    } else if (op_type == "||") {
+      switch(value_type_) {
+        case BOOL_TYPE:
+            return Value(*operand1.bool_ || *operand2.bool_);
+        break;
+        default:
+            format_print(op_type.c_str(), operand1.GetConsName().c_str());
+            exit(-1);
+        break;
+      }
+    } else {
+      fprintf(stderr, "undefined binary operator: %s\n", op_type.c_str());
+      exit(-1);
     }
   } else {
-    // type conversion
+    fprintf(stderr, "inconsistent type: op1:[%s], op2:[%s]\n",
+        operand1.GetConsName().c_str(), operand2.GetConsName().c_str());
+    exit(-1);
+    // TODO type conversion
   }
 }
 

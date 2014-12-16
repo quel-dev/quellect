@@ -26,6 +26,7 @@ inline short MakeToken();
 %%
 
 "=="        { Return(EQ);}
+"!="        { Return(NE);}
 "<"         { Return(LT);}
 ">"         { Return(GT);}
 "<="        { Return(LE);}
@@ -134,10 +135,10 @@ inline short MakeToken() {
       yylval.double_token = new DoubleToken(Tok, str_to_d(yytext));
     break;
     case CONST_STR:
-      yylval.token = new StringToken(Tok, str_to_const_str(yytext));
+      yylval.token = new StringToken(Tok, str_to_const_str(yytext), true);
     break;
     default:
-      yylval.token = new StringToken(Tok, yytext);
+      yylval.token = new StringToken(Tok, yytext, false);
   }
   return Tok;
 }

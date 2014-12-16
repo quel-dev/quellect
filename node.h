@@ -234,10 +234,11 @@ class DoubleToken : public Node {
 
 class StringToken : public Node {
  public:
-  StringToken(int token_id, const std::string& value);
+  StringToken(int token_id, const std::string& value, bool isconst);
   const std::string& GetStrTok();
   Value Eval(Environment* env);
  protected:
+  bool isconst_;
   int token_id_;
   const std::string value_;
 };

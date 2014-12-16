@@ -11,7 +11,7 @@ struct Function;
 class ValuePtrList;
 
 enum {
-  INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE
+  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE
 };
 
 struct Value {
@@ -19,6 +19,7 @@ struct Value {
   Value(const Value& value);
   Value& operator =(const Value& value);
 
+  Value(bool data);
   Value(int data);
   Value(double data);
   Value(const std::string& data);
@@ -26,6 +27,7 @@ struct Value {
   Value(const Object& f);
 
   union {
+    bool* bool_;
     int* int_;
     double* double_;
     std::string* string_;

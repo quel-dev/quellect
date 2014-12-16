@@ -6,4 +6,35 @@ function fac(x) {
   }
 }
 
-println (fac 5);
+println (fac 100);
+
+a = (fac 100);
+b = (fac 5);
+
+println "a", a;
+println "b", b;
+
+info = "a != b";
+
+if (a == b) {
+} else {
+  println info, info;
+  println "const string";
+  println "test escape\"";
+  println a;
+}
+
+println "a + b", (a + b);
+println "a - b", (a - b);
+println "a * b", (a * b);
+println "a / b", (a / b);
+println "a % b", (a % b);
+
+println "a == b", (a == b);
+println "a != b", (a != b);
+println "a > b", (a > b);
+println "a < b", (a < b);
+println "a >= b", (a >= b);
+println "a <= b", (a <= b);
+println "(a == b) && (a != b)", (a == b) && (a != b);
+println "(a == b) || (a != b)", (a <= b) || (a != b);

@@ -8,6 +8,8 @@
 #include "util.h"
 #endif
 
+#include <cstdlib>
+
 #define ANONY_IDEN "/"
 
 const std::string& Node::GetType(){
@@ -96,6 +98,7 @@ Value BinaryOpExpNode::Eval(Environment* env) {
     env->set(operand1_->GetStrTok(), val);
     return val;
   } else {
+    //TODO deal with short-circuit evaluation
     Value val1 = operand1_->Eval(env); 
     Value val2 = operand2_->Eval(env); 
     return CalcBinaryOp(node_type_, val1, val2);
@@ -172,8 +175,6 @@ IntToken::IntToken(int token_id, int value):
 }
 
 Value IntToken::Eval(Environment* env) {
-  //puts(node_type_.c_str());
-  //printf("%d\n", value_);
   return Value(value_);
 }
 
@@ -183,14 +184,13 @@ DoubleToken::DoubleToken(int token_id, double value):
 }
 
 Value DoubleToken::Eval(Environment* env) {
-  //puts(node_type_.c_str());
-  //printf("%lf\n", value_);
   return Value(value_);
 }
 
-StringToken::StringToken(int token_id, const std::string& value):
-    token_id_(token_id), value_(value){
-  node_type_ = "string_token";    
+StringToken::StringToken(int token_id, const std::string& value,
+                         bool isconst):
+    token_id_(token_id), value_(value), isconst_(isconst) {
+  node_type_ = "string_token";
 }
 
 const std::string& StringToken::GetStrTok() {
@@ -198,12 +198,15 @@ const std::string& StringToken::GetStrTok() {
 }
 
 Value StringToken::Eval(Environment* env) {
-  //puts(node_type_.c_str());
-  //printf("%s\n",value_.c_str());
-  if(env->ContainsVar(value_)) {
-    return env->get(value_);
+  if (!isconst_) {
+    if(env->ContainsVar(value_)) {
+      return env->get(value_);
+    } else {
+      fprintf(stderr, "undefined variable: %s\n", value_.c_str());
+      exit(-1);
+    } 
   } else {
-    //fprintf(stderr, "undefined variable: %s\n", value_.c_str());
+    return Value(value_);
   }
 }
 
