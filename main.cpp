@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
   // after calling yyparse, the program has been successfully
   // parsed and the root of AST is stored in Node* root.
   Environment global;
-  (root->Eval(&global)).Display();
+  (root->Eval(&global));
   fclose(file);
   return 0;
 }

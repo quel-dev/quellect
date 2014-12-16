@@ -81,12 +81,14 @@ class ValuePtrList {
     }
   }
 
-  void push_back(Value *ptr) {
+  Value* push_back(Value *ptr) {
     _values.push_back(ptr);
+    return ptr;
   }
-  void push_back(const Value& v) {
+  Value* push_back(const Value& v) {
     Value *ptr = new Value(v);
     _values.push_back(ptr);
+    return ptr;
   }
 
   size_t size(void) const { return _values.size(); }

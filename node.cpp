@@ -23,6 +23,20 @@ ListNode::ListNode(const std::string& type) {
   node_type_ = type;
 }
 
+Value PrintNode::Eval(Environment *env) {
+  ValuePtrList tmp = exp_->EvalToList(env);
+  for (size_t i = 0; i < tmp.size(); i++) {
+    tmp[i]->Display();
+    if (i + 1 != tmp.size()) printf("\n");
+  }
+  if (ln) printf("\n");
+  if (tmp.size()) {
+    return *tmp[tmp.size() - 1];
+  } else {
+    return Value(-1);
+  }
+}
+
 void ListNode::Add(Node* node) {
   nodes_.push_back(node);
 }
@@ -230,14 +244,15 @@ Value FuncDef::Eval(Environment* env) {
   env->Display();
 #endif
   func.context = new Environment;
-  *(func.context) = *env;
   func.literal = literal_;
   func.param_list = parameters_;
   Value value(func);
+  Value *func_ref = &value;
   if (func_iden_ != ANONY_IDEN) {
-    env->SetFunction(func_iden_, value);
+    func_ref = env->SetFunction(func_iden_, value);
   }
-  return value;
+  *(func_ref->function_->context) = *env;
+  return *func_ref;
 }
 
 Value FuncExp::Eval(Environment* env) {

@@ -242,4 +242,13 @@ class StringToken : public Node {
   const std::string value_;
 };
 
+class PrintNode : public Node {
+  public:
+    PrintNode(int ln, Node *exp):ln(ln), exp_(exp){}
+    Value Eval(Environment* env);
+  protected:
+    int ln;
+    Node *exp_;
+};
+
 // TODO(tianshi) to combine Get*Tok

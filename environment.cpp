@@ -171,8 +171,8 @@ void Environment::SetConsOfType(std::string cons_name, std::string type_name) {
   cons_to_type_table_[cons_name] = type_name;
 }
 
-void Environment::SetFunction(const std::string& iden, const Value& value) {
-  functions_table_[iden].push_back(value);
+Value* Environment::SetFunction(const std::string& iden, const Value& value) {
+  return functions_table_[iden].push_back(value);
 }
 
 Value* Environment::SelectFunction(const std::string& iden, const ValuePtrList& values) {

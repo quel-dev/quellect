@@ -1,0 +1,9 @@
+function fac(x) {
+  if (x) {
+    return x + (fac x - 1);
+  } else {
+    return 0;
+  }
+}
+
+println (fac 5);

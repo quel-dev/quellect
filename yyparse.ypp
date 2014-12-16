@@ -57,6 +57,8 @@ void yyerror(Node* root, const char* msg) {
 %token<int_token> INT_NUM
 %token<double_token> DOUBLE_NUM
 %token<token> CONST_STR
+%token<token> PRINT
+%token<token> PRINTLN
 
 %type<node> start
 %type<node> assignment-expression
@@ -85,6 +87,8 @@ void yyerror(Node* root, const char* msg) {
 %type<node> behavior-statement
 %type<node> event-statement
 %type<node> jump-statement
+%type<node> print-statement
+%type<node> println-statement
 %type<node> function-expression
 %type<r_type_node> parameter-pair-comma-list
 %type<r_type_node> r-type-definition
@@ -306,6 +310,18 @@ statement
   | behavior-statement    ';'                                           { $$ = $1;}
   | event-statement                                                     { $$ = $1;}
   | jump-statement        ';'                                           { $$ = $1;}
+  | print-statement       ';'                                           { $$ = $1;}
+  | println-statement       ';'                                           { $$ = $1;}
+  ;
+
+print-statement
+  :
+  PRINT expression-comma-list                                          { $$ = new PrintNode(0, $2); }
+  ;
+
+println-statement
+  :
+  PRINTLN expression-comma-list                                        { $$ = new PrintNode(1, $2); }
   ;
 
 compound-statement

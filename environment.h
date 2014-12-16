@@ -27,7 +27,7 @@ class Environment {
   void SetConsOfType(std::string cons_name, std::string type_name);
   std::string GetTypeByCons(std::string);
 
-  void SetFunction(const std::string& iden, const Value& value);
+  Value* SetFunction(const std::string& iden, const Value& value);
   Value* SelectFunction(const std::string& iden, const ValuePtrList& values); 
 
   Environment(Environment* env = NULL):father(env){}

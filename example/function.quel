@@ -7,5 +7,6 @@ function cons_add(x) {
 
 f = (cons_add 2);
 g = (cons_add 3);
-tmp1 = (f 10);
-tmp2 = (g 10);
+
+print (f 10), (f100);
+println (g 20);
