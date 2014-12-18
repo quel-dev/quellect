@@ -1,7 +1,7 @@
 BISON_MAC = /usr/local/Cellar/bison/3.0.2/bin/bison -d
 BISON_LINUX = bison -d
 LEX = lex
-CC = g++
+CC = g++ -DDEBUG
 
 main: main.cpp type.o node.o util.o environment.o lex.yy.o yyparse.tab.o
 	$(CC) -g -Wall -o $@ $^

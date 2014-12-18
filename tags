@@ -1,0 +1,245 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ANONY_IDEN	node.cpp	13;"	d	file:
+ARRAY_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+Add	node.cpp	/^void ListNode::Add(Node* node) {$/;"	f	class:ListNode
+Add	node.cpp	/^void TypeDefNode::Add(Node* cons) {$/;"	f	class:TypeDefNode
+Add	node.h	/^  virtual void Add(Node* item){}$/;"	f	class:Node
+Add	node.h	/^  void Add(TypePattern* oth) { sub_types.push_back(oth); }$/;"	f	struct:TypePattern
+Add	type.h	/^  void Add(const Value& value) {$/;"	f	struct:Object
+AddBranch	node.cpp	/^void SwitchBranch::AddBranch(Node* condition, Node* action) {$/;"	f	class:SwitchBranch
+AddBranch	node.h	/^  virtual void AddBranch(Node* condition, Node* action){}$/;"	f	class:Node
+AliasNode	node.cpp	/^AliasNode::AliasNode(const std::string& iden, Node* type):$/;"	f	class:AliasNode
+AliasNode	node.h	/^class AliasNode : public Node {$/;"	c
+BISON_LINUX	Makefile	/^BISON_LINUX = bison -d$/;"	m
+BISON_MAC	Makefile	/^BISON_MAC = \/usr\/local\/Cellar\/bison\/3.0.2\/bin\/bison -d$/;"	m
+BOOL_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+BehaviorNode	node.cpp	/^BehaviorNode::BehaviorNode(const std::string& behav_iden, Node* signal):$/;"	f	class:BehaviorNode
+BehaviorNode	node.h	/^class BehaviorNode : public Node {$/;"	c
+BinaryOpExpNode	node.cpp	/^BinaryOpExpNode::BinaryOpExpNode($/;"	f	class:BinaryOpExpNode
+BinaryOpExpNode	node.h	/^class BinaryOpExpNode : public Node {$/;"	c
+BindParams	util.cpp	/^void BindParams(const std::vector<TypePattern*>& pattern, const ValuePtrList& params, Environment* env) {$/;"	f
+CC	Makefile	/^CC = g++$/;"	m
+CalcBinaryOp	util.cpp	/^Value CalcBinaryOp(const std::string& op_type,$/;"	f
+ConsDefNode	node.cpp	/^ConsDefNode::ConsDefNode(const std::string& iden, Node* type_list):$/;"	f	class:ConsDefNode
+ConsDefNode	node.h	/^class ConsDefNode : public Node {$/;"	c
+ContainsCons	environment.cpp	/^bool Environment::ContainsCons(const std::string& iden) {$/;"	f	class:Environment
+ContainsType	environment.cpp	/^bool Environment::ContainsType(const std::string& iden) {$/;"	f	class:Environment
+ContainsVar	environment.cpp	/^bool Environment::ContainsVar(const std::string& iden) {$/;"	f	class:Environment
+CopyList	node.cpp	/^void ListNode::CopyList(std::vector<Node*>* nodes) {$/;"	f	class:ListNode
+CopyList	node.h	/^  virtual void CopyList(std::vector<Node*>* items){}$/;"	f	class:Node
+DOUBLE_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+Display	environment.cpp	/^void Environment::Display(void) {$/;"	f	class:Environment
+Display	node.h	/^  void Display(void) {$/;"	f	struct:TypePattern
+Display	type.cpp	/^void Value::Display() const {$/;"	f	class:Value
+DoubleToken	node.cpp	/^DoubleToken::DoubleToken(int token_id, double value):$/;"	f	class:DoubleToken
+DoubleToken	node.h	/^class DoubleToken : public Node {$/;"	c
+ENVIRONMENT_H_	environment.cpp	5;"	d	file:
+ENVIRONMENT_H_	node.h	7;"	d
+ENVIRONMENT_H_	type.h	2;"	d
+ENVIRONMENT_H_	util.h	5;"	d
+Environment	environment.h	/^  Environment(Environment* env = NULL):father(env){}$/;"	f	class:Environment
+Environment	environment.h	/^class Environment {$/;"	c
+Eval	node.cpp	/^Value BinaryOpExpNode::Eval(Environment* env) {$/;"	f	class:BinaryOpExpNode
+Eval	node.cpp	/^Value ConsDefNode::Eval(Environment* env) {$/;"	f	class:ConsDefNode
+Eval	node.cpp	/^Value DoubleToken::Eval(Environment* env) {$/;"	f	class:DoubleToken
+Eval	node.cpp	/^Value FuncDef::Eval(Environment* env) {$/;"	f	class:FuncDef
+Eval	node.cpp	/^Value FuncExp::Eval(Environment* env) {$/;"	f	class:FuncExp
+Eval	node.cpp	/^Value IfNode::Eval(Environment *env) {$/;"	f	class:IfNode
+Eval	node.cpp	/^Value IntToken::Eval(Environment* env) {$/;"	f	class:IntToken
+Eval	node.cpp	/^Value JumpNode::Eval(Environment* env) {$/;"	f	class:JumpNode
+Eval	node.cpp	/^Value ListNode::Eval(Environment* env) {$/;"	f	class:ListNode
+Eval	node.cpp	/^Value PrintNode::Eval(Environment *env) {$/;"	f	class:PrintNode
+Eval	node.cpp	/^Value StringToken::Eval(Environment* env) {$/;"	f	class:StringToken
+Eval	node.cpp	/^Value TypeDefNode::Eval(Environment* env) {$/;"	f	class:TypeDefNode
+Eval	node.h	/^  virtual Value Eval(Environment* environment){puts(node_type_.c_str());};$/;"	f	class:Node
+EvalToList	node.cpp	/^ValuePtrList ListNode::EvalToList(Environment* env) {$/;"	f	class:ListNode
+EvalToList	node.h	/^  virtual ValuePtrList EvalToList(Environment*){};$/;"	f	class:Node
+EventNode	node.cpp	/^EventNode::EventNode(Node* exp, Node* action):$/;"	f	class:EventNode
+EventNode	node.h	/^class EventNode : public Node {$/;"	c
+FUNCTION_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+FuncDef	node.cpp	/^FuncDef::FuncDef(const std::string& func_iden, TypePattern* parameters, Node* literal):$/;"	f	class:FuncDef
+FuncDef	node.h	/^class FuncDef : public Node {$/;"	c
+FuncExp	node.cpp	/^FuncExp::FuncExp(const std::string& func_iden, Node* parameters):$/;"	f	class:FuncExp
+FuncExp	node.h	/^class FuncExp : public Node {$/;"	c
+Function	type.cpp	/^Function::Function(const Function& oth) {$/;"	f	class:Function
+Function	type.h	/^  Function(){}$/;"	f	struct:Function
+Function	type.h	/^  Function(TypePattern* param_list, Node* literal, Environment* context):param_list(param_list), literal(literal), context(context){};$/;"	f	struct:Function
+Function	type.h	/^struct Function {$/;"	s
+GetCons	environment.cpp	/^std::vector<std::string> Environment::GetCons(const std::string& iden) {$/;"	f	class:Environment
+GetConsName	node.h	/^  const std::string& GetConsName(void) {return cons_name;}$/;"	f	struct:TypePattern
+GetConsName	type.cpp	/^std::string Value::GetConsName(void) const {$/;"	f	class:Value
+GetDouble	type.h	/^  double GetDouble(void) const { return *double_; }$/;"	f	struct:Value
+GetFunction	type.h	/^  const Function& GetFunction(void) const { return *function_; }$/;"	f	struct:Value
+GetInt	type.h	/^  int GetInt(void) const { return *int_; }$/;"	f	struct:Value
+GetObject	type.h	/^  const Object& GetObject(void) const { return *object_; }$/;"	f	struct:Value
+GetPairIden	node.h	/^  virtual const std::string& GetPairIden(){}$/;"	f	class:Node
+GetPairType	node.h	/^  virtual Node* GetPairType(){}$/;"	f	class:Node
+GetRef	type.h	/^  const Value& GetRef(const int& index) const { return *_values[index]; }$/;"	f	class:ValuePtrList
+GetStrTok	node.cpp	/^const std::string& StringToken::GetStrTok() {$/;"	f	class:StringToken
+GetStrTok	node.h	/^  const std::string& GetStrTok(){return iden_;}$/;"	f	class:ConsDefNode
+GetStrTok	node.h	/^  const std::string& GetStrTok(){return iden_;}$/;"	f	class:TypeDefNode
+GetStrTok	node.h	/^  virtual const std::string& GetStrTok(){}$/;"	f	class:Node
+GetString	type.h	/^  const std::string& GetString(void) const { return *string_; }$/;"	f	struct:Value
+GetType	environment.cpp	/^std::vector<std::string> Environment::GetType(const std::string& iden) {$/;"	f	class:Environment
+GetType	node.cpp	/^const std::string& Node::GetType(){$/;"	f	class:Node
+GetType	type.h	/^  int GetType(void) const {return value_type_;}$/;"	f	struct:Value
+GetTypeByCons	environment.cpp	/^std::string Environment::GetTypeByCons(std::string cons_name) {$/;"	f	class:Environment
+GetValues	type.cpp	/^const ValuePtrList& Value::GetValues(void) const {$/;"	f	class:Value
+INT_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+IfNode	node.cpp	/^IfNode::IfNode(Node* condition, Node* if_branch, Node* else_branch):$/;"	f	class:IfNode
+IfNode	node.h	/^class IfNode : public Node {$/;"	c
+IntToken	node.cpp	/^IntToken::IntToken(int token_id, int value):$/;"	f	class:IntToken
+IntToken	node.h	/^class IntToken : public Node {$/;"	c
+IsDouble	type.h	/^  bool IsDouble(void) const { return value_type_ == DOUBLE_TYPE; }$/;"	f	struct:Value
+IsFunction	type.h	/^  bool IsFunction(void) const { return value_type_ == FUNCTION_TYPE; }$/;"	f	struct:Value
+IsInt	type.h	/^  bool IsInt(void) const { return value_type_ == INT_TYPE; }$/;"	f	struct:Value
+IsNumType	type.h	/^  bool IsNumType(void) const { return IsInt() || IsDouble(); }$/;"	f	struct:Value
+IsObject	type.h	/^  bool IsObject(void) const { return value_type_ == OBJECT_TYPE; }$/;"	f	struct:Value
+IsParamListMatched	util.cpp	/^bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrList& values) {$/;"	f
+IsParamMatched	util.cpp	/^bool IsParamMatched(const TypePattern *pattern, const Value* value) {$/;"	f
+IsPrimaryType	type.cpp	/^bool Value::IsPrimaryType(void) const {$/;"	f	class:Value
+IsString	type.h	/^  bool IsString(void) const { return value_type_ == STRING_TYPE; }$/;"	f	struct:Value
+IsTerminal	node.h	/^  bool IsTerminal(void) const { return sub_types.empty(); }$/;"	f	struct:TypePattern
+IsTrue	util.cpp	/^bool IsTrue(const Value& value) {$/;"	f
+JumpNode	node.cpp	/^JumpNode::JumpNode(const std::string& type, Node* value):$/;"	f	class:JumpNode
+JumpNode	node.h	/^class JumpNode : public Node {$/;"	c
+LEX	Makefile	/^LEX = lex$/;"	m
+ListNode	node.cpp	/^ListNode::ListNode(const std::string& type) {$/;"	f	class:ListNode
+ListNode	node.cpp	/^ListNode::ListNode(const std::string& type, Node* item) {$/;"	f	class:ListNode
+ListNode	node.h	/^class ListNode : public Node { $/;"	c
+NODE_H_	environment.cpp	10;"	d	file:
+NODE_H_	main.cpp	2;"	d	file:
+NODE_H_	node.cpp	2;"	d	file:
+NODE_H_	util.h	15;"	d
+Node	node.h	/^  Node(){};$/;"	f	class:Node
+Node	node.h	/^class Node {$/;"	c
+OBJECT_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+Object	type.h	/^  Object(){}$/;"	f	struct:Object
+Object	type.h	/^  Object(std::string cons_name, const ValuePtrList& values):cons_name(cons_name), values(values) {}$/;"	f	struct:Object
+Object	type.h	/^struct Object {$/;"	s
+PrintNode	node.h	/^    PrintNode(int ln, Node *exp):ln(ln), exp_(exp){}$/;"	f	class:PrintNode
+PrintNode	node.h	/^class PrintNode : public Node {$/;"	c
+PropertyIndexNode	node.cpp	/^PropertyIndexNode::PropertyIndexNode(Node* obj, Node* index):$/;"	f	class:PropertyIndexNode
+PropertyIndexNode	node.h	/^class PropertyIndexNode : public Node {$/;"	c
+STRING_TYPE	type.h	/^  BOOL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, ARRAY_TYPE, FUNCTION_TYPE, OBJECT_TYPE$/;"	e	enum:__anon1
+SelectFunction	environment.cpp	/^Value* Environment::SelectFunction(const std::string& iden, const ValuePtrList& values) {$/;"	f	class:Environment
+SetCons	environment.cpp	/^void Environment::SetCons(const std::string& iden, const std::vector<std::string>& value) {$/;"	f	class:Environment
+SetConsName	node.h	/^  void SetConsName(std::string name) { cons_name = name; }$/;"	f	struct:TypePattern
+SetConsOfType	environment.cpp	/^void Environment::SetConsOfType(std::string cons_name, std::string type_name) {$/;"	f	class:Environment
+SetFunction	environment.cpp	/^Value* Environment::SetFunction(const std::string& iden, const Value& value) {$/;"	f	class:Environment
+SetType	environment.cpp	/^void Environment::SetType(const std::string& iden, const std::vector<std::string>& value) {$/;"	f	class:Environment
+StringToken	node.cpp	/^StringToken::StringToken(int token_id, const std::string& value,$/;"	f	class:StringToken
+StringToken	node.h	/^class StringToken : public Node {$/;"	c
+SwitchBranch	node.h	/^  SwitchBranch(){};$/;"	f	class:SwitchBranch
+SwitchBranch	node.h	/^class SwitchBranch : public Node {$/;"	c
+SwitchNode	node.cpp	/^SwitchNode::SwitchNode(Node* var, Node* branches):$/;"	f	class:SwitchNode
+SwitchNode	node.h	/^class SwitchNode : public Node {$/;"	c
+TYPE_H_	environment.h	6;"	d
+TYPE_H_	node.h	12;"	d
+TYPE_H_	type.cpp	2;"	d	file:
+TYPE_H_	util.h	10;"	d
+TypeDefNode	node.cpp	/^TypeDefNode::TypeDefNode(const std::string& iden, Node* cons):$/;"	f	class:TypeDefNode
+TypeDefNode	node.h	/^class TypeDefNode : public Node {$/;"	c
+TypePattern	node.h	/^  TypePattern() {}$/;"	f	struct:TypePattern
+TypePattern	node.h	/^  TypePattern(const TypePattern& oth) {$/;"	f	struct:TypePattern
+TypePattern	node.h	/^  TypePattern(std::string cons_name):cons_name(cons_name){}$/;"	f	struct:TypePattern
+TypePattern	node.h	/^struct TypePattern {$/;"	s
+UTIL_H_	environment.cpp	15;"	d	file:
+UTIL_H_	node.cpp	7;"	d	file:
+UTIL_H_	type.cpp	7;"	d	file:
+UTIL_H_	util.cpp	2;"	d	file:
+UnaryOpExpNode	node.cpp	/^UnaryOpExpNode::UnaryOpExpNode($/;"	f	class:UnaryOpExpNode
+UnaryOpExpNode	node.h	/^class UnaryOpExpNode : public Node {$/;"	c
+Value	type.cpp	/^Value::Value(bool data):value_type_(BOOL_TYPE) {$/;"	f	class:Value
+Value	type.cpp	/^Value::Value(const Function& f):value_type_(FUNCTION_TYPE) {$/;"	f	class:Value
+Value	type.cpp	/^Value::Value(const Object& o):value_type_(OBJECT_TYPE) {$/;"	f	class:Value
+Value	type.cpp	/^Value::Value(const Value& v) {$/;"	f	class:Value
+Value	type.cpp	/^Value::Value(const std::string& data):value_type_(STRING_TYPE) {$/;"	f	class:Value
+Value	type.cpp	/^Value::Value(double data):value_type_(DOUBLE_TYPE) {$/;"	f	class:Value
+Value	type.cpp	/^Value::Value(int data):value_type_(INT_TYPE) {$/;"	f	class:Value
+Value	type.h	/^  Value():value_type_(-1){}$/;"	f	struct:Value
+Value	type.h	/^struct Value {$/;"	s
+ValuePtrList	type.h	/^  ValuePtrList() {}$/;"	f	class:ValuePtrList
+ValuePtrList	type.h	/^  ValuePtrList(const ValuePtrList& oth) {$/;"	f	class:ValuePtrList
+ValuePtrList	type.h	/^class ValuePtrList {$/;"	c
+YYLEX_HPP_	main.cpp	7;"	d	file:
+YYPARSE_TAB_HPP_	main.cpp	12;"	d	file:
+_values	type.h	/^  std::vector<Value*> _values;$/;"	m	class:ValuePtrList
+action_	node.h	/^  Node* action_;$/;"	m	class:EventNode
+behav_iden_	node.h	/^  const std::string behav_iden_;$/;"	m	class:BehaviorNode
+bool_	type.h	/^    bool* bool_;$/;"	m	union:Value::__anon2
+branches_	node.h	/^  Node* branches_;$/;"	m	class:SwitchNode
+branches_	node.h	/^  std::vector<std::pair<Node*, Node*> > branches_;$/;"	m	class:SwitchBranch
+compatibleForArith	util.cpp	/^bool compatibleForArith(const Value& op1, const Value& op2) {$/;"	f
+condition_	node.h	/^  Node* condition_;$/;"	m	class:IfNode
+cons_list_	node.h	/^  std::vector<Node*> cons_list_;$/;"	m	class:TypeDefNode
+cons_name	node.h	/^  std::string cons_name;$/;"	m	struct:TypePattern
+cons_name	type.h	/^  std::string cons_name;$/;"	m	struct:Object
+cons_table_	environment.h	/^  std::map<std::string, std::vector<std::string> > cons_table_;$/;"	m	class:Environment
+cons_to_type_table_	environment.h	/^  std::map<std::string, std::string> cons_to_type_table_;$/;"	m	class:Environment
+context	type.h	/^  Environment* context;$/;"	m	struct:Function
+double_	type.h	/^    double* double_;$/;"	m	union:Value::__anon2
+else_branch_	node.h	/^  Node* else_branch_;$/;"	m	class:IfNode
+empty	type.h	/^  bool empty(void) const { return _values.empty(); }$/;"	f	class:ValuePtrList
+exp_	node.h	/^    Node *exp_;$/;"	m	class:PrintNode
+exp_	node.h	/^  Node* exp_;$/;"	m	class:EventNode
+father	environment.h	/^  Environment *father;$/;"	m	class:Environment
+foreach	environment.cpp	20;"	d	file:
+foreach	environment.cpp	50;"	d	file:
+format_print	util.cpp	/^void format_print(const char* operation_type, const char* operand_consname) {$/;"	f
+func_iden_	node.h	/^  const std::string func_iden_;$/;"	m	class:FuncDef
+func_iden_	node.h	/^  const std::string func_iden_;$/;"	m	class:FuncExp
+function_	type.h	/^    Function* function_;$/;"	m	union:Value::__anon2
+functions_table_	environment.h	/^  std::map<std::string, ValuePtrList > functions_table_;$/;"	m	class:Environment
+get	environment.cpp	/^Value Environment::get(const std::string& iden) {$/;"	f	class:Environment
+iden_	node.h	/^  const std::string iden_;$/;"	m	class:AliasNode
+iden_	node.h	/^  const std::string iden_;$/;"	m	class:ConsDefNode
+iden_	node.h	/^  const std::string iden_;$/;"	m	class:TypeDefNode
+if_branch_	node.h	/^  Node* if_branch_;$/;"	m	class:IfNode
+index_	node.h	/^  Node* index_;$/;"	m	class:PropertyIndexNode
+int_	type.h	/^    int* int_;$/;"	m	union:Value::__anon2
+isconst_	node.h	/^  bool isconst_;$/;"	m	class:StringToken
+literal	type.h	/^  Node* literal;$/;"	m	struct:Function
+literal_	node.h	/^  Node* literal_;$/;"	m	class:FuncDef
+ln	node.h	/^    int ln;$/;"	m	class:PrintNode
+main	main.cpp	/^int main(int argc, char* argv[]) {$/;"	f
+node_type_	node.h	/^  std::string node_type_;$/;"	m	class:Node
+nodes_	node.h	/^  std::vector<Node*> nodes_;$/;"	m	class:ListNode
+obj_	node.h	/^  Node* obj_;$/;"	m	class:PropertyIndexNode
+object_	type.h	/^    Object* object_;$/;"	m	union:Value::__anon2
+operand1_	node.h	/^  Node* operand1_;$/;"	m	class:BinaryOpExpNode
+operand2_	node.h	/^  Node* operand2_;$/;"	m	class:BinaryOpExpNode
+operand_	node.h	/^  Node* operand_;$/;"	m	class:UnaryOpExpNode
+operator =	node.h	/^  TypePattern& operator =(const TypePattern& oth) {$/;"	f	struct:TypePattern
+operator =	type.cpp	/^Value& Value::operator =(const Value& v) {$/;"	f	class:Value
+operator =	type.h	/^  ValuePtrList& operator =(const ValuePtrList& oth) {$/;"	f	class:ValuePtrList
+operator []	type.h	/^  Value* operator [](const int& index) const { return _values[index]; }$/;"	f	class:ValuePtrList
+param_list	type.h	/^  TypePattern* param_list;$/;"	m	struct:Function
+parameters_	node.h	/^  Node* parameters_;$/;"	m	class:FuncExp
+parameters_	node.h	/^  TypePattern* parameters_;$/;"	m	class:FuncDef
+push_back	type.h	/^  Value* push_back(Value *ptr) {$/;"	f	class:ValuePtrList
+push_back	type.h	/^  Value* push_back(const Value& v) {$/;"	f	class:ValuePtrList
+set	environment.cpp	/^void Environment::set(const std::string& iden, const Value& value) {$/;"	f	class:Environment
+signal_	node.h	/^  Node* signal_;$/;"	m	class:BehaviorNode
+size	type.h	/^  size_t size(void) const { return _values.size(); }$/;"	f	class:ValuePtrList
+string_	type.h	/^    std::string* string_;$/;"	m	union:Value::__anon2
+sub_types	node.h	/^  std::vector<TypePattern*> sub_types;$/;"	m	struct:TypePattern
+token_id_	node.h	/^  int token_id_;$/;"	m	class:DoubleToken
+token_id_	node.h	/^  int token_id_;$/;"	m	class:IntToken
+token_id_	node.h	/^  int token_id_;$/;"	m	class:StringToken
+type_	node.h	/^  Node* type_;$/;"	m	class:AliasNode
+type_list_	node.h	/^  std::vector<Node*> type_list_;$/;"	m	class:ConsDefNode
+type_table_	environment.h	/^  std::map<std::string, std::vector<std::string> > type_table_;$/;"	m	class:Environment
+value_	node.h	/^  Node* value_;$/;"	m	class:JumpNode
+value_	node.h	/^  const std::string value_;$/;"	m	class:StringToken
+value_	node.h	/^  double value_;$/;"	m	class:DoubleToken
+value_	node.h	/^  int value_;$/;"	m	class:IntToken
+value_type_	type.h	/^  int value_type_;$/;"	m	struct:Value
+values	type.h	/^  ValuePtrList values;$/;"	m	struct:Object
+var_	node.h	/^  Node* var_;$/;"	m	class:SwitchNode
+variable_table_	environment.h	/^  std::map<std::string, Value> variable_table_;$/;"	m	class:Environment
