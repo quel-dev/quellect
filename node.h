@@ -1,3 +1,5 @@
+//#define DEBUG
+
 #include <cstdio>
 
 #include <string>
@@ -141,7 +143,7 @@ struct TypePattern {
     }
     if (cons_name != "") {
       printf(">");
-    } else printf("\n");
+    }
   }
 };
 

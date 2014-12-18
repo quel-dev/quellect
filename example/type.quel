@@ -1,5 +1,0 @@
-type point = cons2::<int, int> | cons3::<int, int, int>;
-type vector = cons_vec::<int, point>;
-
-a = (cons_vec 2 + 3, (cons3 1, 2, 3));
-

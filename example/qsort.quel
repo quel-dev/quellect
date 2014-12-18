@@ -1,6 +1,48 @@
 type list = cons::<int, list> | null::<int>;
 
-a = (cons 1, (cons 2, (cons 3, (null 0))));
-b = (cons 1, (cons 2, (cons 3, (null 1))));
+a = (cons 5, (cons 1, (cons 4, (cons 2, (cons 3, (null 0))))));
+b = (cons 1, (cons 2, (cons 3, (null 0))));
 
-print a == b;
+function cons_less(x) {
+  function less(y) {
+    return y < x;
+  }
+  return less;
+}
+
+function cons_greater_eq(x) {
+  function greater_eq(y) {
+    return y >= x;
+  }
+  return greater_eq;
+}
+
+function filter(null::<a>, f) {
+  return (null 0);
+}
+
+function filter(cons::<x, xs>, f) {
+  if (f(x)) {
+    return (cons x, (filter xs, f));
+  } else {
+    return (filter xs, f);
+  }
+}
+
+function cat(null::<a>, res) {
+  return res;
+}
+
+function cat(cons::<x, xs>, res) {
+  return (cons x, (cat xs, res));
+}
+
+function qsort(null::<a>) {
+  return (null 0);
+}
+
+function qsort(cons::<x, xs>) {
+  return (cat (cat (qsort (filter xs, (cons_less x))), (cons x, (null 0))), (qsort (filter xs, (cons_greater_eq x))));
+}
+
+println (qsort (cat a, b));

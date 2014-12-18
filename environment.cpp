@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <exception>
 
 #ifndef ENVIRONMENT_H_
 #define ENVIRONMENT_H_
@@ -67,30 +68,24 @@ void Environment::set(const std::string& iden, const Value& value) {
 }
 
 Value Environment::get(const std::string& iden) {
-  if (variable_table_.find(iden) != variable_table_.end()) {
-    return variable_table_[iden]; 
-  } else {
-    if (father != NULL) {
-      return father->get(iden);
-    } else {
-      // TODO
-      fprintf(stderr, "undefined variable: %s\n", iden.c_str());
-    }
+  try {
+    return GetVariable(iden);
+  } catch (const std::exception& e) {
+    return GetFunction(iden);
   }
 }
 
-bool Environment::ContainsVar(const std::string& iden) {
+Value Environment::GetVariable(const std::string& iden) {
   if (variable_table_.find(iden) != variable_table_.end()) {
-    return true;
+    return variable_table_[iden];
   } else {
     if (father != NULL) {
-      return father->ContainsVar(iden);
+      return father->GetVariable(iden);
     } else {
-      return false;
+      throw std::exception();
     }
   }
 }
-
 
 void Environment::SetType(const std::string& iden, const std::vector<std::string>& value) {
   type_table_[iden] = value;
@@ -175,7 +170,7 @@ Value* Environment::SetFunction(const std::string& iden, const Value& value) {
   return functions_table_[iden].push_back(value);
 }
 
-Value* Environment::SelectFunction(const std::string& iden, const ValuePtrList& values) {
+Value Environment::SelectFunction(const std::string& iden, const ValuePtrList& values) const {
   __typeof(functions_table_.begin()) it = functions_table_.find(iden);
   if (it == functions_table_.end()) {
     if (father != NULL) {
@@ -187,14 +182,33 @@ Value* Environment::SelectFunction(const std::string& iden, const ValuePtrList& 
   }
   for (size_t i = 0; i < it->second.size(); ++i) {
     if (IsParamListMatched(it->second[i]->function_->param_list->sub_types, values)) {
-      return it->second[i];
+      return *(it->second[i]);
     }
   }
   if (father != NULL) {
     return father->SelectFunction(iden, values);
   } else {
     // TODO
-    fprintf(stderr, "can not find a matched function\n", iden.c_str());
+    fprintf(stderr, "can not find a matched function %s\n", iden.c_str());
+  }
+}
+
+Value Environment::GetFunction(const std::string& iden) const {
+  __typeof(functions_table_.begin()) it = functions_table_.find(iden);
+  if (it == functions_table_.end()) {
+    if (father != NULL) {
+      return father->GetFunction(iden);
+    } else {
+      // TODO
+      fprintf(stderr, "can not find the function %s\n", iden.c_str());
+    }
+  } else {
+    if (it->second.size() > 1) {
+      // TODO
+      fprintf(stderr, "there is multiple function instance %s\n", iden.c_str());
+    } else {
+      return *(it->second[0]);
+    }
   }
 }
 

@@ -231,6 +231,7 @@ bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrLi
 
 #ifdef DEBUG
   printf("@matching...\n");
+  fflush(stdout);
 #endif
 
   for (size_t i = 0; i < values.size(); ++i) {
@@ -240,6 +241,7 @@ bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrLi
     pattern_list[i]->Display(); puts("");
     printf("+");
     values[i]->Display(); puts("");
+    fflush(stdout);
 #endif
 
     if (!IsParamMatched(pattern_list[i], values[i])) return false;
@@ -288,6 +290,8 @@ bool IsTrue(const Value& value) {
       return value.GetDouble() != 0;
     case STRING_TYPE:
       return value.GetString() != "";
+    case BOOL_TYPE:
+      return value.GetBool();
   }
   return true;
 }

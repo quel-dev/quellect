@@ -1,0 +1,13 @@
+function cons_less(x) {
+  function less(y) {
+    return y < x;
+  }
+  return less;
+}
+
+f = (cons_less 3);
+g = (cons_less 10);
+
+println (f 2);
+println (f 4);
+println (g 4);

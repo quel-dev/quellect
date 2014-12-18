@@ -14,7 +14,7 @@ class Environment {
  public:
   void set(const std::string& iden, const Value& value);
   Value get(const std::string& iden);
-  bool ContainsVar(const std::string& iden);
+  Value GetVariable(const std::string&);
 
   void SetType(const std::string& iden, const std::vector<std::string>& value);
   std::vector<std::string> GetType(const std::string& iden);
@@ -28,7 +28,8 @@ class Environment {
   std::string GetTypeByCons(std::string);
 
   Value* SetFunction(const std::string& iden, const Value& value);
-  Value* SelectFunction(const std::string& iden, const ValuePtrList& values); 
+  Value SelectFunction(const std::string& iden, const ValuePtrList& values) const; 
+  Value GetFunction(const std::string& iden) const;
 
   Environment(Environment* env = NULL):father(env){}
 

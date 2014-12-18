@@ -1,0 +1,14 @@
+type list = cons::<int, list> | null::<int>;
+
+a = (cons 5, (cons 1, (cons 4, (cons 2, (cons 3, (null 0))))));
+b = (cons 1, (cons 2, (cons 3, (null 0))));
+
+function cat(null::<a>, res) {
+  return res;
+}
+
+function cat(cons::<x, xs>, res) {
+  return (cons x, (cat xs, res));
+}
+
+println (cat a, b);

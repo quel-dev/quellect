@@ -12,3 +12,4 @@ yyparse.tab.cpp
 yyparse.tab.hpp
 lex.yy.c
 
+log
