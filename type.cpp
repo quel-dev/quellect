@@ -8,6 +8,8 @@
 #include "util.h"
 #endif
 
+#include <cstdlib>
+
 Value::Value(bool data):value_type_(BOOL_TYPE) {
   bool_ = new bool;
   *bool_ = data;
@@ -35,6 +37,27 @@ Value::Value(const Function& f):value_type_(FUNCTION_TYPE) {
 Value::Value(const Object& o):value_type_(OBJECT_TYPE) {
   object_ = new Object;
   *object_ = o;
+}
+
+bool Value::operator == (const Value& v) {
+  if (value_type_ != v.value_type_) {
+    return false;
+  } else {
+    switch (value_type_) {
+      case BOOL_TYPE:
+        return *bool_ == *v.bool_;
+      case INT_TYPE:
+        return *int_ == *v.int_;
+      case DOUBLE_TYPE:
+        return *double_ == *v.double_;
+      case STRING_TYPE:
+        return *string_ == *v.string_;
+      default:
+        fprintf(stderr, "cannot judge equality: %s",
+                v.GetConsName().c_str());
+        exit(-1);
+    }
+  }
 }
 
 Value::Value(const Value& v) {

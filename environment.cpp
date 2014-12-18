@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include <exception>
+#include <set>
 
 #ifndef ENVIRONMENT_H_
 #define ENVIRONMENT_H_
@@ -16,6 +17,27 @@
 #define UTIL_H_
 #include "util.h"
 #endif
+
+const std::map<std::string, Node*>& Environment::GetSig(const std::string& iden) {
+  return signal_table_[iden];
+}
+
+void Environment::AddSignalAction (Node* signal, const std::string& behav_iden) {
+    const std::set<std::string>& sig_idens =
+        signal->GetSubtreeIden();
+#define foreach(it, T) for(__typeof((T).begin()) it = (T).begin(); it != (T).end(); ++it)
+    foreach(it, sig_idens) {
+      if (ContainsSig(*it)) {
+        std::map<std::string, Node*>& cur = signal_table_[*it];
+        cur.insert(make_pair(behav_iden, signal));
+      } else {
+        std::map<std::string, Node*> tmp;
+        tmp.insert(make_pair(behav_iden, signal));
+        signal_table_.insert(make_pair(*it, tmp));
+      }
+    }
+#undef foreach
+}
 
 void Environment::Display(void) {
 #define foreach(it, T) for(__typeof((T).begin()) it = (T).begin(); it != (T).end(); ++it)
@@ -110,6 +132,18 @@ bool Environment::ContainsType(const std::string& iden) {
   } else {
     if (father != NULL) {
       return father->ContainsType(iden);
+    } else {
+      return false;
+    }
+  }
+}
+
+bool Environment::ContainsSig(const std::string& iden) {
+  if (signal_table_.find(iden) != signal_table_.end()) {
+    return true;
+  } else {
+    if (father != NULL) {
+      return father->ContainsSig(iden);
     } else {
       return false;
     }

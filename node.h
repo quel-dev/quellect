@@ -1,6 +1,7 @@
 //#define DEBUG
 
 #include <cstdio>
+#include <set>
 
 #include <string>
 #include <vector>
@@ -19,6 +20,7 @@ class Node {
  public:
   Node(){};
   const std::string& GetType();
+  const std::set<std::string>& GetSubtreeIden();
   virtual void Add(Node* item){}
   virtual void CopyList(std::vector<Node*>* items){}
   virtual const std::string& GetPairIden(){}
@@ -29,6 +31,7 @@ class Node {
   virtual ValuePtrList EvalToList(Environment*){};
  protected:
   std::string node_type_;
+  std::set<std::string> subtree_idens_;
 };
 
 class ListNode : public Node { 
@@ -203,6 +206,7 @@ class JumpNode : public Node {
 class BehaviorNode : public Node {
  public:
   BehaviorNode(const std::string& behav_iden, Node* signal);
+  Value Eval(Environment*);
  protected:
   const std::string behav_iden_;
   Node* signal_;

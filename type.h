@@ -26,6 +26,8 @@ struct Value {
   Value(const Function& f);
   Value(const Object& f);
 
+  bool operator == (const Value& v);
+
   union {
     bool* bool_;
     int* int_;

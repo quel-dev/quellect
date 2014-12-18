@@ -1,0 +1,11 @@
+b = 1;
+c = 2;
+a <- b + c;
+println a;
+c = 3;
+println a;
+d <- a;
+println d;
+c = 5;
+println a;
+println d;
