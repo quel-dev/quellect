@@ -44,6 +44,7 @@ struct Value {
 
   int GetInt(void) const { return *int_; }
   double GetDouble(void) const { return *double_; }
+  bool GetBool(void) const { return *bool_; }
   const std::string& GetString(void) const { return *string_; }
   const Function& GetFunction(void) const { return *function_; }
   const Object& GetObject(void) const { return *object_; }

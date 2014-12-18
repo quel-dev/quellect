@@ -1,3 +1,6 @@
 type list = cons::<int, list> | null::<int>;
+
 a = (cons 1, (cons 2, (cons 3, (null 0))));
-function Less(x) { return x < 3; }
+b = (cons 1, (cons 2, (cons 3, (null 1))));
+
+print a == b;

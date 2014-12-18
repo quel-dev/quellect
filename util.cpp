@@ -4,10 +4,7 @@
 #endif
 
 #include <cstdlib>
-
-bool compatibleForArith(const Value& op1, const Value& op2) {
-  return op1.IsNumType() && op2.IsNumType();
-}
+#include <cassert>
 
 struct TypePattern;
 
@@ -16,8 +13,42 @@ void format_print(const char* operation_type, const char* operand_consname) {
       operation_type, operand_consname);
 }
 
+bool IsEqual(const Value& op1, const Value& op2) {
+  assert(op1.GetType() == op2.GetType());
+  int cur_type = op1.GetType();
+  switch (cur_type) {
+    case INT_TYPE:
+      return op1.GetInt() == op2.GetInt();
+    case DOUBLE_TYPE:
+      return op1.GetDouble() == op2.GetDouble();
+    case BOOL_TYPE:
+      return op1.GetBool() == op2.GetBool();
+    case STRING_TYPE:
+      return op1.GetString() == op2.GetString();
+    case OBJECT_TYPE:
+      if (op1.GetConsName() == op2.GetConsName()) {
+        const ValuePtrList& op1_value_list = op1.GetValues();
+        const ValuePtrList& op2_value_list = op2.GetValues();
+        if (op1_value_list.size() == op2_value_list.size()) {
+          bool valid = true;
+          for (size_t i = 0; i < op1_value_list.size(); i++) {
+            if (!IsEqual(*op1_value_list[i], *op2_value_list[i])) {
+              valid = false;
+              break;
+            }
+          }
+          if (valid) return true;
+        }
+      }
+      return false;
+    default:
+      format_print("equal", "function");
+      break;
+  }
+}
+
 Value CalcBinaryOp(const std::string& op_type,
-                   Value operand1, Value operand2) {
+                   const Value& operand1, const Value& operand2) {
   if (operand1.value_type_ == operand2.value_type_) {
     int value_type_ = operand1.value_type_;
     if (op_type == "+") {
@@ -158,39 +189,9 @@ Value CalcBinaryOp(const std::string& op_type,
         break;
       }
     } else if (op_type == "==") {
-      switch(value_type_) {
-        case BOOL_TYPE:
-          return Value(*operand1.bool_ == *operand2.bool_);
-        break;
-        case INT_TYPE:
-          return Value(*operand1.int_ == *operand2.int_);
-        break;
-        case DOUBLE_TYPE:
-          return Value(*operand1.double_ == *operand2.double_);
-        break;
-        case STRING_TYPE:
-          return Value(*operand1.string_ == *operand2.string_);
-        break;
-        default:
-          format_print(op_type.c_str(), operand1.GetConsName().c_str());
-          exit(-1);
-        break;
-      }
+      return Value(IsEqual(operand1, operand2));
     } else if (op_type == "!=") {
-      switch(value_type_) {
-        case INT_TYPE:
-          return Value(*operand1.int_ != *operand2.int_);
-        break;
-        case DOUBLE_TYPE:
-          return Value(*operand1.double_ != *operand2.double_);
-        case STRING_TYPE:
-          return Value(*operand1.string_ != *operand2.string_);
-        break;
-        default:
-          format_print(op_type.c_str(), operand1.GetConsName().c_str());
-          exit(-1);
-        break;
-      }
+      return Value( ! IsEqual(operand1, operand2));
     } else if (op_type == "&&") {
       switch(value_type_) {
         case BOOL_TYPE:

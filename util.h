@@ -19,7 +19,9 @@
 bool compatibleForArith(const Value&, const Value&);
 
 Value CalcBinaryOp(const std::string& op_type,
-                   Value operand1, Value operand2); 
+                   const Value& operand1, const Value& operand2); 
+
+bool IsEqual(const Value&, const Value&);
 
 bool IsParamListMatched(std::vector<TypePattern*> pattern_list, const ValuePtrList& values);
 
