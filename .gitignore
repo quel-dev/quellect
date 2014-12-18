@@ -15,3 +15,5 @@ lex.yy.c
 log
 tags
 test
+
+.DS_Store
