@@ -3,20 +3,6 @@ type list = cons::<int, list> | null::<int>;
 a = cons(5,cons(1,cons(4,cons(2,cons(3,null(0))))));
 b = cons(1,cons(2,cons(3,null(0))));
 
-function cons_less(x) {
-  function less(y) {
-    return y < x;
-  }
-  return less;
-}
-
-function cons_greater_eq(x) {
-  function greater_eq(y) {
-    return y >= x;
-  }
-  return greater_eq;
-}
-
 function filter(null::<a>, f) {
   return null(0);
 }
@@ -42,7 +28,7 @@ function qsort(null::<a>) {
 }
 
 function qsort(cons::<x, xs>) {
-  return cat(cat(qsort(filter(xs, cons_less(x))), cons(x, null(0))), qsort(filter(xs, cons_greater_eq(x))));
+  return cat(cat(qsort(filter(xs, \y:(y<x))), cons(x, null(0))), qsort(filter(xs, \y:(y>=x))));
 }
 
 println qsort(cat(a, b));

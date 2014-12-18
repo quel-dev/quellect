@@ -1,0 +1,19 @@
+type list = cons::<int, list> | null::<int>;
+
+a = cons(5,cons(1,cons(4,cons(2,cons(3,null(0))))));
+
+cons_less = \x:(\y:(y<x));
+
+function filter(null::<a>, f) {
+  return null(0);
+}
+
+function filter(cons::<x, xs>, f) {
+  if (f(x)) {
+    return cons(x, filter (xs, f));
+  } else {
+    return filter(xs, f);
+  }
+}
+
+println filter(a, cons_less(4));

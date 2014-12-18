@@ -10,7 +10,7 @@
 
 #include <cstdlib>
 
-#define ANONY_IDEN "/"
+#define ANONY_IDEN "\\"
 const std::string& Node::GetType(){
   return node_type_;
 }

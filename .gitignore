@@ -13,3 +13,5 @@ yyparse.tab.hpp
 lex.yy.c
 
 log
+tags
+test

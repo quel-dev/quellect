@@ -306,6 +306,10 @@ r-type-definition-list
 
 expression
   : constant-expression                                                 { $$ = $1;}
+
+  | '\\' parameter-comma-list ':' '(' expression ')'               {
+                                                                              $$ = new FuncDef("\\", $2, $5);
+                                                                        }
   ;
 
 expression-comma-list
@@ -393,7 +397,7 @@ jump-statement
                                                                           $$ = new JumpNode("break", NULL);
                                                                           delete($1);
                                                                         }
-  | RETURN constant-expression                                          {
+  | RETURN expression                                          {
                                                                           $$ = new JumpNode("return", $2);
                                                                           delete($1);
                                                                         }
