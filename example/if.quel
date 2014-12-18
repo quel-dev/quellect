@@ -1,6 +1,10 @@
 x = 0;
 if (x) {
   a = 3;
+  x = 100;
+  println a;
 } else {
   a = 4;
+  x = 100;
+  println a;
 }

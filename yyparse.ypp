@@ -55,6 +55,8 @@ void yyerror(Node* root, const char* msg) {
 %token<token> BREAK
 %token<token> CONTINUE
 %token<token> IDEN
+%token<token> FOR
+%token<token> WHILE
 %token<int_token> INT_NUM
 %token<double_token> DOUBLE_NUM
 %token<token> CONST_STR
@@ -90,6 +92,8 @@ void yyerror(Node* root, const char* msg) {
 %type<node> print-statement
 %type<node> println-statement
 %type<node> function-expression
+%type<node> for-statement
+%type<node> while-statement
 %type<r_type_node> parameter-comma-list
 %type<r_type_node> r-type-definition
 %type<r_type_node> r-type-definition-list
@@ -321,6 +325,10 @@ statement
   | jump-statement        ';'                                           { $$ = $1;}
   | print-statement       ';'                                           { $$ = $1;}
   | println-statement       ';'                                         { $$ = $1;}
+  | for-statement  
+    { $$ = $1; }
+  | while-statement 
+    { $$ = $1; }
   ;
 
 print-statement
@@ -412,3 +420,19 @@ event-statement
                                                                           delete($2);
                                                                         }
   ;
+
+
+for-statement
+  : FOR  constant-expression ',' constant-expression ',' constant-expression  '{' compound-statement '}' {
+      $$ = new ForNode($2, $4, $6, $8);
+      delete($1);
+  }
+;
+
+
+while-statement
+  : WHILE constant-expression '{' compound-statement '}'                   {
+                                                                          $$ = new WhileNode($2, $4);
+                                                                          delete($1);
+                                                                        }
+;

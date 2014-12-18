@@ -11,7 +11,6 @@
 #include <cstdlib>
 
 #define ANONY_IDEN "/"
-
 const std::string& Node::GetType(){
   return node_type_;
 }
@@ -78,8 +77,10 @@ Value IfNode::Eval(Environment *env) {
   Value cond = condition_->Eval(env);
   if (IsTrue(cond)) {
     return if_branch_->Eval(env);
-  } else {
+  } else if (else_branch_ != NULL) {
     return else_branch_->Eval(env);
+  } else {
+      return Value(-1);
   }
 }
 
@@ -304,3 +305,28 @@ Value FuncExp::Eval(Environment* env) {
   }
 }
 
+ForNode::ForNode(Node* init, Node* condition, Node* update, Node* comp): init_(init), condition_(condition), update_(update), comp_(comp_) {}
+
+
+Value ForNode::Eval(Environment *env) {
+  Value initial = init_->Eval(env);
+  Value cond = condition_->Eval(env);
+  while (IsTrue(cond)){
+      comp_->Eval(env);
+      update_->Eval(env);
+      cond = condition_->Eval(env);
+  }
+  return Value(-1);
+}
+
+
+WhileNode::WhileNode(Node* condition, Node* comp): condition_(condition), comp_(comp) {}
+
+Value WhileNode::Eval(Environment *env){
+  Value cond = condition_->Eval(env);
+  while (IsTrue(cond)) {
+    comp_->Eval(env);
+    cond = condition_->Eval(env);
+  }
+  return Value(-1);
+}

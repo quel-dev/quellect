@@ -252,4 +252,24 @@ class PrintNode : public Node {
     Node *exp_;
 };
 
+class ForNode : public Node {
+ public:
+  ForNode(Node* init_, Node* condition_, Node* update_, Node* comp_);
+  Value Eval(Environment *env); 
+ protected:
+  Node* init_;
+  Node* condition_;
+  Node* update_;
+  Node* comp_;
+};
+
+
+class WhileNode : public Node {
+ public:
+  WhileNode(Node* condition, Node* comp);
+  Value Eval(Environment *env); 
+ protected:
+  Node* condition_;
+  Node* comp_;
+};
 // TODO(tianshi) to combine Get*Tok
