@@ -49,8 +49,8 @@ inline short MakeToken();
 "print"     { Return(PRINT);}
 "println"   { Return(PRINTLN);}
 [A-Za-z_]+[0-9]*  { Return(IDEN);}
-[0-9]+      { Return(INT_NUM);}
-[0-9]*\.[0-9]+ { Return(DOUBLE_NUM);}
+[\-]?[0-9]+      { Return(INT_NUM);}
+[\-]?[0-9]*\.[0-9]+ { Return(DOUBLE_NUM);}
 \"[^"]*.    { 
               if (yytext[yyleng-2] == '\\') {
                 yyless(yyleng-1);
@@ -71,9 +71,15 @@ extern YYSTYPE yylval;
 
 // base == 10
 double str_to_d(char* s) {
+  bool neg = (s[0] == '-');
   const double base = 10;
   double int_value = 0;
-  int i = 0; 
+  int i;
+  if (neg) {
+    i = 1;
+  } else {
+    i = 0;
+  }
   while(s[i] && s[i] != '.') {
     assert(s[i] >= '0');
     assert(s[i] <= '9');
@@ -95,19 +101,28 @@ double str_to_d(char* s) {
     base_mult *= base;
     ++i;
   }
-  return int_value + frac_value;
+  if (neg) {
+    return -(int_value + frac_value);
+  } else {
+    return int_value + frac_value;
+  }
 }
 
 int str_to_32(char* s) {
+  bool neg = (s[0] == '-');
   const int base = 10;
   int value = 0;
-  for (int i = 0 ; s[i] ; ++i) {
+  for (int i = neg ? 1 : 0 ; s[i] ; ++i) {
     assert(s[i] >= '0');
     assert(s[i] <= '9');
     value *= base;
     value += (s[i] - '0');
   }
-  return value;
+  if (-neg) {
+    return -value;
+  } else {
+    return value;
+  }
 }
 
 std::string str_to_const_str(const char* s) {

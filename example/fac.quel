@@ -1,3 +1,8 @@
+println -1;
+println -1.0;
+negative = -1 - 1;
+println negative;
+
 function fac(x) {
   if (x) {
     return x + (fac x - 1);
