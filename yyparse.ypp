@@ -355,9 +355,9 @@ compound-statement
   ;
 
 function-expression
-  : '(' IDEN expression-comma-list ')'                                  { 
-                                                                          $$ = new FuncExp(($2)->GetStrTok(), $3);
-                                                                        }
+  :  IDEN '(' expression-comma-list ')'                                  { 
+                                                                          $$ = new FuncExp(($1)->GetStrTok(), $3);
+                                                                         }
   ;
 
 selection-statement

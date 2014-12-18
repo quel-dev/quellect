@@ -5,8 +5,8 @@ function cons_add(x) {
   return add;
 }
 
-f = (cons_add 2);
-g = (cons_add 3);
+f = cons_add(2);
+g = cons_add(3);
 
-print (f 10), (f100);
-println (g 20);
+println f(10), f(100);
+println g(20);
