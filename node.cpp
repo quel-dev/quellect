@@ -316,21 +316,20 @@ Value FuncExp::Eval(Environment* env) {
     return f.function_->literal->Eval(new_env);
   }
 }
-
-ForNode::ForNode(Node* init, Node* condition, Node* update, Node* comp): init_(init), condition_(condition), update_(update), comp_(comp_) {}
+ForNode::ForNode(Node* init, Node* comp): init_(init), comp_(comp) {}
 
 
 Value ForNode::Eval(Environment *env) {
+  printf("wahahah");
   Value initial = init_->Eval(env);
-  Value cond = condition_->Eval(env);
+/*  Value cond = condition_->Eval(env);
   while (IsTrue(cond)){
       comp_->Eval(env);
       update_->Eval(env);
       cond = condition_->Eval(env);
-  }
+  }*/
   return Value(-1);
 }
-
 
 WhileNode::WhileNode(Node* condition, Node* comp): condition_(condition), comp_(comp) {}
 

@@ -256,7 +256,7 @@ class PrintNode : public Node {
 
 class ForNode : public Node {
  public:
-  ForNode(Node* init_, Node* condition_, Node* update_, Node* comp_);
+  ForNode(Node* init, Node* comp);
   Value Eval(Environment *env); 
  protected:
   Node* init_;

@@ -325,9 +325,9 @@ statement
   | jump-statement        ';'                                           { $$ = $1;}
   | print-statement       ';'                                           { $$ = $1;}
   | println-statement       ';'                                         { $$ = $1;}
-  | for-statement  
-    { $$ = $1; }
   | while-statement 
+    { $$ = $1; }
+  | for-statement  
     { $$ = $1; }
   ;
 
@@ -423,8 +423,8 @@ event-statement
 
 
 for-statement
-  : FOR  constant-expression ',' constant-expression ',' constant-expression  '{' compound-statement '}' {
-      $$ = new ForNode($2, $4, $6, $8);
+  : FOR '(' assignment-expression  ')' '{' compound-statement '}' {
+      $$ = new ForNode($3, $6);
       delete($1);
   }
 ;
