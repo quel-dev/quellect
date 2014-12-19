@@ -9,6 +9,7 @@
 #endif
 
 #include <cstdlib>
+#include <cmath>
 
 Value::Value(bool data):value_type_(BOOL_TYPE) {
   bool_ = new bool;
@@ -49,7 +50,7 @@ bool Value::operator == (const Value& v) {
       case INT_TYPE:
         return *int_ == *v.int_;
       case DOUBLE_TYPE:
-        return *double_ == *v.double_;
+        return fabs(*double_ - *v.double_) < 1e-8;
       case STRING_TYPE:
         return *string_ == *v.string_;
       default:

@@ -211,6 +211,32 @@ Value BehaviorNode::Eval(Environment* env) {
   // TODO add iterative update when behav_iden is already a signal.
   Value v = signal_->Eval(env);
   env->set(behav_iden_, v);
+  if (env->ContainsSig(behav_iden_)) {
+    std::queue<std::string> tok_queue;
+    tok_queue.push(behav_iden_);
+#define foreach(it, T) for(__typeof((T).begin()) it = (T).begin(); it != (T).end(); ++it)
+    while(!tok_queue.empty()) {
+      const std::string& top_iden = tok_queue.front();
+      tok_queue.pop();
+      const std::map<std::string, Node*> affected_behav =
+        env->GetSig(top_iden);
+      foreach(it, affected_behav) {
+        const std::string& iden = it->first;
+        Node* exp = it->second;
+        Value primary = env->get(iden);
+        Value update = exp->Eval(env);
+        if (!(primary == update)) {
+          env->set(iden, update);
+          if (env->ContainsSig(iden)) {
+            tok_queue.push(iden); 
+          }
+        }
+      }
+    }
+#undef foreach
+  }
+  v = env->get(behav_iden_);
+  return v;
 }
 
 EventNode::EventNode(Node* exp, Node* action):
